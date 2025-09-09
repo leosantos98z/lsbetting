@@ -396,7 +396,7 @@ label {
     box-sizing: border-box;
 }
 
-.status-badge.status-concluido {
+.status-badge.status-concluído {
     background-color: rgba(34, 197, 94, 0.2);
     color: var(--green-color) !important;
 }
@@ -496,4 +496,5 @@ label {
 .text-light {
     color: var(--text-color);
 }
+
 
