@@ -18,34 +18,51 @@ body {
     background-color: var(--bg-color);
     color: var(--text-color);
     margin: 0;
-    position: relative; /* Necessário para o posicionamento do wallpaper */
 }
-
-/* === WALLPAPER DE FUNDO === */
-body::before {
-    content: '';
-    position: fixed; /* Fica fixo no fundo, mesmo com scroll */
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: -1; /* Coloca o wallpaper atrás de todo o conteúdo */
-    
-    /* ↓↓↓  COLE A URL DA SUA LOGO AQUI  ↓↓↓
-    */
-    background-image: url('https://sdmntprwestus.oaiusercontent.com/files/00000000-857c-6230-afdb-5a3e12d1f388/raw?se=2025-09-09T00%3A42%3A40Z&sp=r&sv=2024-08-04&sr=b&scid=9efba776-5db8-5bce-b127-ec78d8182913&skoid=789f404f-91a9-4b2f-932c-c44965c11d82&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2025-09-08T18%3A45%3A19Z&ske=2025-09-09T18%3A45%3A19Z&sks=b&skv=2024-08-04&sig=AlGgYSnd4PfqGtniICL5DkQj9fD7FEpitEKIcN%2BjM0E%3D'); 
-    
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: contain; /* Ajusta a logo para caber na tela */
-    opacity: 0.10; /* Deixa a imagem bem clarinha. Ajuste entre 0.01 e 0.1 */
-}
-
 
 .container {
     max-width: 1400px;
     margin: 0 auto;
     padding: 1rem 2rem;
+}
+
+/* === TELA DE LOGIN === */
+.auth-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+.auth-card {
+    background-color: var(--card-color);
+    padding: 2rem;
+    border-radius: 12px;
+    width: 100%;
+    max-width: 400px;
+    border: 1px solid var(--border-color);
+}
+.form-group {
+    margin-bottom: 1rem;
+}
+.auth-error {
+    color: var(--red-color);
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+    min-height: 1.2em;
+}
+.auth-toggle-message {
+    margin-top: 1.5rem;
+    text-align: center;
+    font-size: 0.9rem;
+    color: var(--text-muted-color);
+}
+.link-button {
+    background: none;
+    border: none;
+    color: var(--primary-color);
+    cursor: pointer;
+    font-weight: 700;
+    padding: 0;
 }
 
 /* === CABEÇALHO === */
@@ -77,6 +94,7 @@ body::before {
     align-items: center;
     gap: 0.5rem;
     transition: color 0.2s;
+    cursor: pointer;
 }
 .nav-link:hover, .nav-link.active {
     color: var(--text-color);
@@ -84,7 +102,20 @@ body::before {
 .user-profile {
     font-weight: 500;
 }
-
+.subscription-status {
+    font-size: 0.9rem;
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    font-weight: 700;
+}
+.subscription-status.active {
+    background-color: rgba(34, 197, 94, 0.2);
+    color: var(--green-color);
+}
+.subscription-status.expired {
+    background-color: rgba(239, 68, 68, 0.2);
+    color: var(--red-color);
+}
 
 .card {
     background-color: var(--card-color);
@@ -213,21 +244,20 @@ textarea {
 }
 
 .chart-toggle {
-    display: flex;
     background-color: #3a3a3a;
     border-radius: 6px;
     padding: 4px;
+    display: flex;
 }
 
 .chart-toggle-btn {
-    background-color: transparent;
+    background: none;
     border: none;
     color: var(--text-muted-color);
-    font-weight: 700;
     padding: 0.25rem 0.75rem;
     border-radius: 4px;
     cursor: pointer;
-    transition: all 0.2s ease-in-out;
+    font-weight: 700;
 }
 
 .chart-toggle-btn.active {
@@ -238,7 +268,6 @@ textarea {
 .notes-card textarea {
     height: calc(100% - 40px);
 }
-
 
 .empty-state {
     text-align: center;
@@ -450,7 +479,7 @@ label {
 
 .grid-header .grid-cell {
     font-weight: 700;
-    color: var(--primary-color); 
+    color: var(--primary-color);
 }
 
 .resultado-positivo {
@@ -487,14 +516,19 @@ label {
     background-color: var(--red-color);
 }
 
-.text-green {
-    color: var(--green-color);
-}
-.text-yellow {
-    color: var(--primary-color);
-}
-.text-light {
-    color: var(--text-color);
-}
+.text-green { color: var(--green-color); }
+.text-yellow { color: var(--primary-color); }
+.text-light { color: var(--text-color); }
 
+/* ADMIN PANEL */
+.admin-content {
+    display: grid;
+    grid-template-columns: 2fr 1fr auto;
+    gap: 1rem;
+    align-items: flex-end;
+}
+.admin-message {
+    margin-top: 1rem;
+    font-weight: 700;
+}
 
