@@ -82,13 +82,7 @@
                     <input type="text" id="filtroNome" placeholder="🔎 Nome">
                     <input type="text" placeholder="Selecionar período...">
                     <select id="filtroCasa"><option value="todas">Todas as Casas</option></select>
-                    <select id="filtroTipo"><option value="todos">Todos os Tipos</option>
-					<option value="Normal">Normal</option>
-					<option value="Multipla">Múltipla</option>
-					<option value="Surebet">Surebet</option>
-					<option value="Rodadas Gratis">Rodadas Gratis</option>
-					<option value="Metodos">Metodos</option>
-					<option value="Freebet">Freebet</option></select>
+                    <select id="filtroTipo"><option value="todos">Todos os Tipos</option><option value="Normal">Normal</option><option value="Multipla">Múltipla</option><option value="Surebet">Surebet</option><option value="Rodadas Gratis">Rodadas Gratis</option><option value="Metodos">Metodos</option><option value="Freebet">Freebet</option></select>
                     <select id="filtroStatus"><option value="todos">Todos os Status</option><option value="Concluído">Concluído</option><option value="Em andamento">Em andamento</option><option value="Aguardando Freebet">Aguardando Freebet</option></select>
                 </div>
             </section>
@@ -121,12 +115,7 @@
 
         <div class="modal-overlay" id="modalNovaAposta">
             <div class="modal-content"><form id="formNovaAposta"><div class="modal-header"><h2>Nova Aposta</h2><button type="button" class="close-button" id="fecharModalBtn">&times;</button></div><fieldset><legend><span>1</span> Informações Gerais</legend><div class="form-grid-double"><div><label for="data">Data</label><input type="date" id="data" required></div><div><label for="nomeConta">Nome (Conta)</label><input type="text" id="nomeConta" placeholder="Nome (Conta)"></div></div><div class="form-grid-double"><div><label for="obs1">Observação</label><input type="text" id="obs1" placeholder="Observações 1"></div><div><label for="obs2">Observação 2</label><input type="text" id="obs2" placeholder="Observações 2"></div></div><div><label for="tipoAposta">Tipo de aposta</label><select id="tipoAposta">
-			<option value="Normal">Normal</option>
-					<option value="Multipla">Múltipla</option>
-					<option value="Surebet">Surebet</option>
-					<option value="Rodadas Gratis">Rodadas Gratis</option>
-					<option value="Metodos">Metodos</option>
-					<option value="Freebet">Freebet</option></select>
+			<option value="Normal">Normal</option><option value="Multipla">Múltipla</option><option value="Surebet">Surebet</option><option value="Rodadas Gratis">Rodadas Gratis</option><option value="Metodos">Metodos</option><option value="Freebet">Freebet</option></select>
 			</div></fieldset><fieldset><legend><span>2</span> Dados da Aposta</legend><div class="form-grid-double"><div><label for="casaApostas">Casa de apostas</label><input type="text" id="casaApostas" placeholder="Nome da casa de apostas"></div><div><label for="lucroTotalPrevisto">Valor Apostado (R$)</label><input type="number" step="0.01" id="lucroTotalPrevisto" placeholder="Ex: 150.00"></div></div></fieldset><fieldset><legend><span>3</span> Gestão de Resultados</legend><div><label for="resultadoLucroTotal">Lucro (Resultado Final) (R$)</label><input type="number" step="0.01" id="resultadoLucroTotal" placeholder="Ex: 100.00 ou -50.00"></div><label style="margin-top: 1rem;">Status da Aposta</label><div class="status-options"><input type="radio" id="statusConcluido" name="status" value="Concluído" checked><label for="statusConcluido">✅ Concluído</label><input type="radio" id="statusAndamento" name="status" value="Em andamento"><label for="statusAndamento">🕒 Em andamento</label><input type="radio" id="statusFreebet" name="status" value="Aguardando Freebet"><label for="statusFreebet">🔄 Aguardando Freebet</label></div></fieldset><div class="modal-footer"><button type="button" class="button-secondary" id="cancelarBtn">Cancelar</button><button type="submit" class="button-primary">Salvar Aposta</button></div></form></div>
         </div>
         <script src="app.js"></script>
