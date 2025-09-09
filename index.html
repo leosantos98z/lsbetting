@@ -11,14 +11,20 @@
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap');
 
         :root {
-            --bg-color: #1a1a1a;
-            --card-color: #2c2c2c;
-            --border-color: #3e3e3e;
-            --text-color: #f0f0f0;
-            --text-muted-color: #a0a0a0;
-            --primary-color: #facc15;
-            /* Amarelo/Dourado */
-            --primary-text-color: #1a1a1a;
+            --bg-color: #1f2937;
+            /* Cinza escuro azulado */
+            --card-color: #374151;
+            /* Cinza médio */
+            --border-color: #4b5563;
+            /* Cinza para bordas */
+            --text-color: #f3f4f6;
+            /* Texto claro */
+            --text-muted-color: #9ca3af;
+            /* Texto secundário */
+            --primary-color: #3b82f6;
+            /* Azul primário */
+            --primary-text-color: #ffffff;
+            /* Texto do botão primário */
             --green-color: #22c55e;
             --red-color: #ef4444;
         }
@@ -168,7 +174,7 @@
         input,
         select,
         textarea {
-            background-color: #3a3a3a;
+            background-color: #4b5563;
             border: 1px solid var(--border-color);
             border-radius: 6px;
             padding: 0.75rem;
@@ -201,7 +207,7 @@
         }
 
         .button-primary:hover {
-            background-color: #eab308;
+            background-color: #2563eb;
         }
 
         .summary-container {
@@ -236,7 +242,7 @@
         }
 
         .stat-icon {
-            background-color: #3a3a3a;
+            background-color: #4b5563;
             border-radius: 50%;
             width: 40px;
             height: 40px;
@@ -280,7 +286,7 @@
         }
 
         .chart-toggle {
-            background-color: #3a3a3a;
+            background-color: #4b5563;
             border-radius: 6px;
             padding: 4px;
             display: flex;
@@ -408,7 +414,7 @@
         .status-options {
             display: flex;
             gap: 1rem;
-            background-color: #3a3a3a;
+            background-color: #4b5563;
             border-radius: 6px;
             padding: 0.5rem;
         }
@@ -441,7 +447,7 @@
         }
 
         .button-secondary {
-            background-color: #3a3a3a;
+            background-color: #4b5563;
             color: var(--text-color);
             border: none;
             border-radius: 6px;
@@ -467,7 +473,7 @@
         }
 
         .status-badge.status-em-andamento {
-            background-color: rgba(234, 179, 8, 0.2);
+            background-color: rgba(59, 130, 246, 0.2);
             color: var(--primary-color);
         }
 
@@ -502,7 +508,7 @@
         }
 
         .grid-row:hover {
-            background-color: #3a3a3a;
+            background-color: #4b556360;
         }
 
         .grid-cell {
@@ -536,7 +542,7 @@
 
         .button-icon,
         .action-btn {
-            background: #3a3a3a;
+            background: #4b5563;
             border: none;
             color: var(--text-muted-color);
             width: 36px;
@@ -1336,8 +1342,8 @@
                             datasets: [{
                                 label: `Lucro ${tipoTooltip}`,
                                 data: data,
-                                backgroundColor: 'rgba(250, 204, 21, 1)',
-                                borderColor: 'rgba(250, 204, 21, 1)',
+                                backgroundColor: 'rgba(59, 130, 246, 0.8)',
+                                borderColor: 'rgba(59, 130, 246, 1)',
                                 borderWidth: 1,
                                 borderRadius: 4
                             }]
@@ -1629,3 +1635,4 @@
     </script>
 </body>
 </html>
+
