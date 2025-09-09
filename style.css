@@ -1,0 +1,499 @@
+/* Importar uma fonte bonita, como a do exemplo */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap');
+
+:root {
+    --bg-color: #1a1a1a;
+    --card-color: #2c2c2c;
+    --border-color: #3e3e3e;
+    --text-color: #f0f0f0;
+    --text-muted-color: #a0a0a0;
+    --primary-color: #facc15; /* Amarelo/Dourado */
+    --primary-text-color: #1a1a1a;
+    --green-color: #22c55e;
+    --red-color: #ef4444;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    margin: 0;
+    position: relative; /* Necessário para o posicionamento do wallpaper */
+}
+
+/* === WALLPAPER DE FUNDO === */
+body::before {
+    content: '';
+    position: fixed; /* Fica fixo no fundo, mesmo com scroll */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1; /* Coloca o wallpaper atrás de todo o conteúdo */
+    
+    /* ↓↓↓  COLE A URL DA SUA LOGO AQUI  ↓↓↓
+    */
+    background-image: url('https://sdmntprwestus.oaiusercontent.com/files/00000000-857c-6230-afdb-5a3e12d1f388/raw?se=2025-09-09T00%3A42%3A40Z&sp=r&sv=2024-08-04&sr=b&scid=9efba776-5db8-5bce-b127-ec78d8182913&skoid=789f404f-91a9-4b2f-932c-c44965c11d82&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2025-09-08T18%3A45%3A19Z&ske=2025-09-09T18%3A45%3A19Z&sks=b&skv=2024-08-04&sig=AlGgYSnd4PfqGtniICL5DkQj9fD7FEpitEKIcN%2BjM0E%3D'); 
+    
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain; /* Ajusta a logo para caber na tela */
+    opacity: 0.10; /* Deixa a imagem bem clarinha. Ajuste entre 0.01 e 0.1 */
+}
+
+
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 1rem 2rem;
+}
+
+/* === CABEÇALHO === */
+.main-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    background-color: var(--card-color);
+    border-bottom: 1px solid var(--border-color);
+    margin-bottom: 2rem;
+}
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1.2rem;
+    font-weight: 700;
+}
+.main-nav, .user-menu {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+.nav-link {
+    color: var(--text-muted-color);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: color 0.2s;
+}
+.nav-link:hover, .nav-link.active {
+    color: var(--text-color);
+}
+.user-profile {
+    font-weight: 500;
+}
+
+
+.card {
+    background-color: var(--card-color);
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+    padding: 1.5rem;
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+h2, h3 {
+    margin: 0;
+    font-weight: 500;
+}
+
+input, select, textarea {
+    background-color: #3a3a3a;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    padding: 0.75rem;
+    color: var(--text-color);
+    font-size: 1rem;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+textarea {
+    min-height: 150px;
+    resize: vertical;
+}
+
+.filters {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1rem;
+}
+
+.button-primary {
+    background-color: var(--primary-color);
+    color: var(--primary-text-color);
+    border: none;
+    border-radius: 6px;
+    padding: 0.75rem 1.5rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.button-primary:hover {
+    background-color: #eab308;
+}
+
+.summary-container {
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.stats-summary-card .stat-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--border-color);
+}
+.stats-summary-card .stat-item:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+.stats-summary-card .stat-item:first-child {
+    padding-top: 0;
+}
+
+.stat-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.stat-icon {
+    background-color: #3a3a3a;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 1.2rem;
+}
+
+.stat-icon.icon-green { color: var(--green-color); }
+.stat-icon.icon-yellow { color: var(--primary-color); }
+
+.stat-text p {
+    margin: 0;
+    color: var(--text-muted-color);
+}
+
+.stat-value {
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+
+.chart-card {
+    position: relative;
+    height: 250px;
+    display: flex;
+    flex-direction: column;
+}
+
+.chart-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.chart-toggle {
+    display: flex;
+    background-color: #3a3a3a;
+    border-radius: 6px;
+    padding: 4px;
+}
+
+.chart-toggle-btn {
+    background-color: transparent;
+    border: none;
+    color: var(--text-muted-color);
+    font-weight: 700;
+    padding: 0.25rem 0.75rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+}
+
+.chart-toggle-btn.active {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+}
+
+.notes-card textarea {
+    height: calc(100% - 40px);
+}
+
+
+.empty-state {
+    text-align: center;
+    padding: 4rem 0;
+    color: var(--text-muted-color);
+}
+
+.empty-state a {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 700;
+}
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s, visibility 0.3s;
+}
+
+.modal-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.modal-content {
+    background-color: var(--card-color);
+    padding: 2rem;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 600px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.close-button {
+    background: none;
+    border: none;
+    color: var(--text-muted-color);
+    font-size: 2rem;
+    cursor: pointer;
+}
+
+fieldset {
+    border: none;
+    padding: 0;
+    margin: 0 0 1.5rem 0;
+}
+
+fieldset legend {
+    font-size: 1.2rem;
+    font-weight: 500;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+fieldset legend span {
+    background-color: var(--primary-color);
+    color: var(--primary-text-color);
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 0.9rem;
+    font-weight: bold;
+}
+
+label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: var(--text-muted-color);
+}
+
+.form-grid-double {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.status-options {
+    display: flex;
+    gap: 1rem;
+    background-color: #3a3a3a;
+    border-radius: 6px;
+    padding: 0.5rem;
+}
+
+.status-options input[type="radio"] {
+    display: none;
+}
+
+.status-options label {
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    width: 100%;
+    text-align: center;
+    margin: 0;
+}
+
+.status-options input[type="radio"]:checked + label {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-weight: 500;
+}
+
+.modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.button-secondary {
+    background-color: #3a3a3a;
+    color: var(--text-color);
+    border: none;
+    border-radius: 6px;
+    padding: 0.75rem 1.5rem;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.status-badge {
+    padding: 0.3rem 0.8rem;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-align: center;
+    min-width: 100px;
+    display: inline-block;
+    box-sizing: border-box;
+}
+
+.status-badge.status-concluido {
+    background-color: rgba(34, 197, 94, 0.2);
+    color: var(--green-color) !important;
+}
+
+.status-badge.status-em-andamento {
+    background-color: rgba(234, 179, 8, 0.2);
+    color: var(--primary-color);
+}
+
+.status-badge.status-aguardando-freebet {
+    background-color: rgba(59, 130, 246, 0.2);
+    color: #3b82f6;
+}
+
+.bets-grid-container {
+    display: grid;
+    grid-template-columns: 40px 95px 1fr 1fr 2fr 1.2fr 1fr 110px 100px;
+    gap: 1rem;
+    padding: 0 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+    font-weight: 700;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+}
+
+.grid-row {
+    display: grid;
+    grid-template-columns: 40px 95px 1fr 1fr 2fr 1.2fr 1fr 110px 100px;
+    gap: 1rem;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+    transition: background-color 0.2s;
+}
+
+.grid-row:last-child {
+    border-bottom: none;
+}
+
+.grid-row:hover {
+    background-color: #3a3a3a;
+}
+
+.grid-cell {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-weight: 500;
+    color: var(--text-color);
+}
+
+.grid-header .grid-cell {
+    font-weight: 700;
+    color: var(--primary-color); 
+}
+
+.resultado-positivo {
+    color: var(--green-color);
+    font-weight: 700;
+}
+.resultado-negativo {
+    color: var(--red-color);
+    font-weight: 700;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: flex-end;
+}
+.button-icon, .action-btn {
+    background: #3a3a3a;
+    border: none;
+    color: var(--text-muted-color);
+    width: 36px;
+    height: 36px;
+    border-radius: 6px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s, color 0.2s;
+}
+.button-icon:hover, .action-btn:hover {
+    color: var(--text-color);
+}
+.button-danger:hover {
+    background-color: var(--red-color);
+}
+
+.text-green {
+    color: var(--green-color);
+}
+.text-yellow {
+    color: var(--primary-color);
+}
+.text-light {
+    color: var(--text-color);
+}
+
