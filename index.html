@@ -9,225 +9,115 @@
 	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-    <header class="main-header">
-        <div class="logo">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M2 17L12 22L22 17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M2 12L12 17L22 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-            <span>LS Betting</span>
-        </div>
-        <nav class="main-nav">
-            <a href="#" class="nav-link active">Inicio</a>
-            <a href="#" id="novaApostaHeaderBtn" class="nav-link">+ Nova Aposta</a>
-            <a href="#" class="nav-link">Balanços</a>
-            <a href="#" class="nav-link">Calculadora</a>
-        </nav>
-        <div class="user-menu">
-            <a href="#" class="nav-link">Ajuda</a>
-            <a href="#" class="nav-link">🔔</a>
-            <a href="#" class="nav-link user-profile">Leo Santos</a>
-        </div>
-    </header>
 
-    <div class="container">
-        <section class="card">
-            <div class="card-header">
-                <h2>Filtros Avançados</h2>
-                <button id="limparFiltrosBtn" class="link-button">Limpar Filtros</button>
-            </div>
-            <div class="filters">
-                <input type="text" id="filtroNome" placeholder="🔎 Nome">
-                <input type="text" placeholder="Selecionar período...">
-                <select id="filtroCasa">
-                    <option value="todas">Todas as Casas</option>
-                </select>
-                <select id="filtroTipo">
-                    <option value="todos">Todos os Tipos</option>
-                    <option value="Normal">Normal</option>
-                    <option value="Multipla">Múltipla</option>
-                    <option value="Freebet">Freebet</option>
-                    <option value="Surebet">Surebet</option>				
-                    <option value="Rodadas Gratis">Rodadas Gratis</option>
-                    <option value="Método">Método</option>
-                </select>
-                <select id="filtroStatus">
-                    <option value="todos">Todos os Status</option>
-                    <option value="Concluído">Concluído</option>
-                    <option value="Em andamento">Em andamento</option>
-                    <option value="Aguardando Freebet">Aguardando Freebet</option>
-                </select>
-            </div>
-        </section>
-
-        <div class="summary-container">
-            <section class="card stats-summary-card">
-                <div class="stat-item">
-                    <div class="stat-info">
-                        <div class="stat-icon icon-green">$</div>
-                        <div class="stat-text">
-                            <p>Lucro Total</p>
-                        </div>
-                    </div>
-                    <div id="lucroTotalValue" class="stat-value text-green">R$ 0,00</div>
+    <!-- TELA DE LOGIN / CADASTRO -->
+    <div id="auth-container" class="auth-container">
+        <div class="auth-card">
+            <h2 id="auth-title">Login</h2>
+            <form id="auth-form">
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" required>
                 </div>
-                <div class="stat-item">
-                    <div class="stat-info">
-                        <div class="stat-icon icon-yellow">📈</div>
-                        <div class="stat-text">
-                            <p>Lucro Médio</p>
-                        </div>
-                    </div>
-                    <div id="lucroMedioValue" class="stat-value text-yellow">R$ 0,00</div>
+                <div class="form-group">
+                    <label for="password">Senha</label>
+                    <input type="password" id="password" required>
                 </div>
-                <div class="stat-item">
-                    <div class="stat-info">
-                        <div class="stat-icon icon-yellow">🕒</div>
-                        <div class="stat-text">
-                            <p>Apostas em Andamento</p>
-                        </div>
-                    </div>
-                    <div id="apostasAndamentoValue" class="stat-value text-light">0</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-info">
-                        <div class="stat-icon icon-green">✅</div>
-                        <div class="stat-text">
-                            <p>Apostas Concluídas</p>
-                        </div>
-                    </div>
-                    <div id="apostasConcluidasValue" class="stat-value text-light">0</div>
-                </div>
-            </section>
-            
-            <section class="card chart-card">
-                <div class="chart-header">
-                    <h3 id="chartTitle">Lucro Diário</h3>
-                    <div class="chart-toggle">
-                        <button id="chartDailyBtn" class="chart-toggle-btn active">D</button>
-                        <button id="chartMonthlyBtn" class="chart-toggle-btn">M</button>
-                    </div>
-                </div>
-                <canvas id="graficoLucroDiario"></canvas>
-            </section>
-
-            <section class="card notes-card">
-                <h3>Notas</h3>
-                <textarea id="notasTextarea" placeholder="Clique para adicionar nota"></textarea>
-            </section>
-        </div>
-
-        <section class="card">
-            <div class="card-header">
-                <h2>Listagem de Apostas</h2>
-                <div class="actions">
-                    <button id="novaApostaBtn" class="button-primary">Nova Aposta</button>
-                    <button class="button-icon">📥</button>
-                    <button class="button-icon button-danger">🗑️</button>
-                </div>
-            </div>
-            <div class="bets-list">
-                <div class="bets-grid-container grid-header">
-                    <div class="grid-cell">ID</div>
-                    <div class="grid-cell">Data</div>
-                    <div class="grid-cell">Nome</div>
-                    <div class="grid-cell">Casa</div>
-                    <div class="grid-cell">Observação</div>
-                    <div class="grid-cell">Resultado</div>
-                    <div class="grid-cell">Tipo</div>
-                    <div class="grid-cell">Status</div>
-                    <div class="grid-cell">Ações</div>
-                </div>
-            </div>
-        </section>
-    </div>
-
-	<div class="modal-overlay" id="modalNovaAposta">
-        <div class="modal-content">
-            <form id="formNovaAposta">
-                <div class="modal-header">
-                    <h2>Nova Aposta</h2>
-                    <button type="button" class="close-button" id="fecharModalBtn">&times;</button>
-                </div>
-
-                <fieldset>
-                    <legend><span>1</span> Informações Gerais</legend>
-                    <div class="form-grid-double">
-                        <div>
-                            <label for="data">Data</label>
-                            <input type="date" id="data" required>
-                        </div>
-                        <div>
-                            <label for="nomeConta">Nome (Conta)</label>
-                            <input type="text" id="nomeConta" placeholder="Nome (Conta)">
-                        </div>
-                    </div>
-                    <div class="form-grid-double">
-                         <div>
-                            <label for="obs1">Observação</label>
-                            <input type="text" id="obs1" placeholder="Observações 1">
-                        </div>
-                        <div>
-                            <label for="obs2">Observação 2</label>
-                            <input type="text" id="obs2" placeholder="Observações 2">
-                        </div>
-                    </div>
-                    <div>
-                        <label for="tipoAposta">Tipo de aposta</label>
-                        <select id="tipoAposta">
-                            <option value="Normal">Normal</option>
-                            <option value="Multipla">Múltipla</option>
-                            <option value="Freebet">Freebet</option>
-							<option value="Surebet">Surebet</option>
-                            <option value="Rodadas Gratis">Rodadas Gratis</option>
-                            <option value="Método">Método</option>
-                        </select>
-                    </div>
-                </fieldset>
-
-                <fieldset>
-                    <legend><span>2</span> Dados da Aposta</legend>
-                     <div class="form-grid-double">
-                        <div>
-                            <label for="casaApostas">Casa de apostas</label>
-                            <input type="text" id="casaApostas" placeholder="Nome da casa de apostas">
-                        </div>
-                        <div>
-                            <label for="lucroTotalPrevisto">Valor Apostado (R$)</label>
-                            <input type="number" step="0.01" id="lucroTotalPrevisto" placeholder="Ex: 150.00">
-                        </div>
-                    </div>
-                </fieldset>
-
-                <fieldset>
-                    <legend><span>3</span> Gestão de Resultados</legend>
-                    <div>
-                        <label for="resultadoLucroTotal">Lucro (Resultado Final) (R$)</label>
-                        <input type="number" step="0.01" id="resultadoLucroTotal" placeholder="Ex: 100.00 ou -50.00">
-                    </div>
-                    <label style="margin-top: 1rem;">Status da Aposta</label>
-                    <div class="status-options">
-                        <input type="radio" id="statusConcluido" name="status" value="Concluído" checked>
-                        <label for="statusConcluido">✅ Concluído</label>
-                        <input type="radio" id="statusAndamento" name="status" value="Em andamento">
-                        <label for="statusAndamento">🕒 Em andamento</label>
-                        <input type="radio" id="statusFreebet" name="status" value="Aguardando Freebet">
-                        <label for="statusFreebet">🔄 Aguardando Freebet</label>
-                    </div>
-                </fieldset>
-
-                <div class="modal-footer">
-                    <button type="button" class="button-secondary" id="cancelarBtn">Cancelar</button>
-                    <button type="submit" class="button-primary">Salvar Aposta</button>
-                </div>
+                <div id="auth-error" class="auth-error"></div>
+                <button type="submit" id="auth-button" class="button-primary">Entrar</button>
             </form>
+            <p class="auth-toggle-message">
+                <span id="auth-message">Não tem uma conta?</span>
+                <button id="auth-toggle-button" class="link-button">Crie uma agora</button>
+            </p>
         </div>
     </div>
-    
-    <script src="app.js"></script>
+
+    <!-- APLICAÇÃO PRINCIPAL (ESCONDIDA POR PADRÃO) -->
+    <div id="app-container" style="display: none;">
+        <header class="main-header">
+            <div class="logo">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M2 17L12 22L22 17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M2 12L12 17L22 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <span>LS Betting</span>
+            </div>
+            <nav class="main-nav">
+                <a href="#" class="nav-link active">Início</a>
+                <a href="#" id="novaApostaHeaderBtn" class="nav-link">+ Nova Aposta</a>
+                <a href="#" class="nav-link">Balanços</a>
+                <a href="#" class="nav-link">Calculadora</a>
+            </nav>
+            <div class="user-menu">
+                <div id="subscription-status" class="subscription-status"></div>
+                <span id="userEmailDisplay" class="nav-link user-profile"></span>
+                <button id="logout-button" class="link-button">Sair</button>
+            </div>
+        </header>
+
+        <div id="app-content" class="container">
+            <!-- PAINEL DE ADMIN (ESCONDIDO POR PADRÃO) -->
+            <section id="admin-panel" class="card" style="display: none;">
+                <div class="card-header">
+                    <h2>Painel de Administração</h2>
+                </div>
+                <div class="admin-content">
+                    <div class="form-group">
+                        <label for="user-select">Selecionar Utilizador</label>
+                        <select id="user-select"></select>
+                    </div>
+                    <div class="form-group">
+                        <label for="days-to-add">Dias para Adicionar</label>
+                        <input type="number" id="days-to-add" placeholder="Ex: 30">
+                    </div>
+                    <button id="add-days-btn" class="button-primary">Adicionar Dias</button>
+                </div>
+                <div id="admin-message" class="admin-message"></div>
+            </section>
+
+            <section class="card">
+                <div class="card-header">
+                    <h2>Filtros Avançados</h2>
+                    <button id="limparFiltrosBtn" class="link-button">Limpar Filtros</button>
+                </div>
+                <div class="filters">
+                    <input type="text" id="filtroNome" placeholder="🔎 Nome">
+                    <input type="text" placeholder="Selecionar período...">
+                    <select id="filtroCasa"><option value="todas">Todas as Casas</option></select>
+                    <select id="filtroTipo"><option value="todos">Todos os Tipos</option><option value="Normal">Normal</option><option value="Multipla">Múltipla</option><option value="Freebet">Freebet</option></select>
+                    <select id="filtroStatus"><option value="todos">Todos os Status</option><option value="Concluído">Concluído</option><option value="Em andamento">Em andamento</option><option value="Aguardando Freebet">Aguardando Freebet</option></select>
+                </div>
+            </section>
+
+            <div class="summary-container">
+                <section class="card stats-summary-card">
+                    <div class="stat-item"><div class="stat-info"><div class="stat-icon icon-green">$</div><div class="stat-text"><p>Lucro Total</p></div></div><div id="lucroTotalValue" class="stat-value text-green">R$ 0,00</div></div>
+                    <div class="stat-item"><div class="stat-info"><div class="stat-icon icon-yellow">📈</div><div class="stat-text"><p>Lucro Médio</p></div></div><div id="lucroMedioValue" class="stat-value text-yellow">R$ 0,00</div></div>
+                    <div class="stat-item"><div class="stat-info"><div class="stat-icon icon-yellow">🕒</div><div class="stat-text"><p>Apostas em Andamento</p></div></div><div id="apostasAndamentoValue" class="stat-value text-light">0</div></div>
+                    <div class="stat-item"><div class="stat-info"><div class="stat-icon icon-green">✅</div><div class="stat-text"><p>Apostas Concluídas</p></div></div><div id="apostasConcluidasValue" class="stat-value text-light">0</div></div>
+                </section>
+                <section class="card chart-card">
+                    <div class="chart-header"><h3 id="chartTitle">Lucro Diário</h3><div class="chart-toggle"><button id="chartDailyBtn" class="chart-toggle-btn active">D</button><button id="chartMonthlyBtn" class="chart-toggle-btn">M</button></div></div>
+                    <canvas id="graficoLucroDiario"></canvas>
+                </section>
+                <section class="card notes-card">
+                    <h3>Notas</h3>
+                    <textarea id="notasTextarea" placeholder="Clique para adicionar nota"></textarea>
+                </section>
+            </div>
+
+            <section class="card">
+                <div class="card-header">
+                    <h2>Listagem de Apostas</h2>
+                    <div class="actions"><button id="novaApostaBtn" class="button-primary">Nova Aposta</button><button class="button-icon">📥</button><button class="button-icon button-danger">🗑️</button></div>
+                </div>
+                <div class="bets-list"><div class="bets-grid-container grid-header"><div class="grid-cell">ID</div><div class="grid-cell">Data</div><div class="grid-cell">Nome</div><div class="grid-cell">Casa</div><div class="grid-cell">Obs</div><div class="grid-cell">Resultado</div><div class="grid-cell">Tipo</div><div class="grid-cell">Status</div><div class="grid-cell">Ações</div></div></div>
+            </section>
+        </div>
+
+        <div class="modal-overlay" id="modalNovaAposta">
+            <div class="modal-content"><form id="formNovaAposta"><div class="modal-header"><h2>Nova Aposta</h2><button type="button" class="close-button" id="fecharModalBtn">&times;</button></div><fieldset><legend><span>1</span> Informações Gerais</legend><div class="form-grid-double"><div><label for="data">Data</label><input type="date" id="data" required></div><div><label for="nomeConta">Nome (Conta)</label><input type="text" id="nomeConta" placeholder="Nome (Conta)"></div></div><div class="form-grid-double"><div><label for="obs1">Observação</label><input type="text" id="obs1" placeholder="Observações 1"></div><div><label for="obs2">Observação 2</label><input type="text" id="obs2" placeholder="Observações 2"></div></div><div><label for="tipoAposta">Tipo de aposta</label><select id="tipoAposta"><option value="Normal">Normal</option><option value="Multipla">Múltipla</option><option value="Freebet">Freebet</option></select></div></fieldset><fieldset><legend><span>2</span> Dados da Aposta</legend><div class="form-grid-double"><div><label for="casaApostas">Casa de apostas</label><input type="text" id="casaApostas" placeholder="Nome da casa de apostas"></div><div><label for="lucroTotalPrevisto">Valor Apostado (R$)</label><input type="number" step="0.01" id="lucroTotalPrevisto" placeholder="Ex: 150.00"></div></div></fieldset><fieldset><legend><span>3</span> Gestão de Resultados</legend><div><label for="resultadoLucroTotal">Lucro (Resultado Final) (R$)</label><input type="number" step="0.01" id="resultadoLucroTotal" placeholder="Ex: 100.00 ou -50.00"></div><label style="margin-top: 1rem;">Status da Aposta</label><div class="status-options"><input type="radio" id="statusConcluido" name="status" value="Concluído" checked><label for="statusConcluido">✅ Concluído</label><input type="radio" id="statusAndamento" name="status" value="Em andamento"><label for="statusAndamento">🕒 Em andamento</label><input type="radio" id="statusFreebet" name="status" value="Aguardando Freebet"><label for="statusFreebet">🔄 Aguardando Freebet</label></div></fieldset><div class="modal-footer"><button type="button" class="button-secondary" id="cancelarBtn">Cancelar</button><button type="submit" class="button-primary">Salvar Aposta</button></div></form></div>
+        </div>
+        <script src="app.js"></script>
+    </div>
 </body>
 </html>
-
-
 
