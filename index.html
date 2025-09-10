@@ -186,60 +186,42 @@
             <!-- CONTEÚDO DA CALCULADORA -->
             <section id="calculator-panel" class="card" style="display: none;">
                 <div class="card-header">
-                    <h2>Calculadora de Surebet (Arbitragem)</h2>
+                    <h2>Calculadora de Dutching</h2>
                 </div>
-                <div class="calculator-content">
-                    <div class="calculator-inputs">
-                        <div class="form-group">
-                            <label for="totalStake">Valor Total a ser Apostado (R$)</label>
-                            <input type="number" id="totalStake" placeholder="Ex: 1000">
+                <div class="calculator-dutching">
+                    <div class="calculator-main-input">
+                        <label for="totalInvestment">Investimento:</label>
+                        <input type="number" id="totalInvestment" placeholder="R$ 100,00">
+                    </div>
+                    <div class="calculator-summary">
+                        <div class="summary-item">
+                            <span>Lucro:</span>
+                            <strong id="summaryProfit">R$ 0,00</strong>
                         </div>
-                        <div class="form-group-inline">
-                            <label>Número de Resultados</label>
-                            <div class="toggle-switch">
-                                <button id="outcome2Btn" class="toggle-btn active">2</button>
-                                <button id="outcome3Btn" class="toggle-btn">3</button>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="odd1">Odd do Resultado 1</label>
-                            <input type="number" step="0.01" id="odd1" placeholder="Ex: 2.10">
-                        </div>
-                        <div class="form-group">
-                            <label for="odd2">Odd do Resultado 2</label>
-                            <input type="number" step="0.01" id="odd2" placeholder="Ex: 2.05">
-                        </div>
-                        <div class="form-group" id="outcome3Group" style="display: none;">
-                            <label for="odd3">Odd do Resultado 3</label>
-                            <input type="number" step="0.01" id="odd3" placeholder="Ex: 3.50">
+                        <div class="summary-item">
+                            <span>Retorno:</span>
+                            <strong id="summaryReturn">R$ 0,00</strong>
                         </div>
                     </div>
-                    <div class="calculator-results">
-                        <h3>Resultados</h3>
-                        <div id="result-message" class="result-message">Preencha os campos para calcular</div>
-                        <div id="result-details" style="display: none;">
-                            <div class="result-item">
-                                <span>Aposta no Resultado 1:</span>
-                                <strong id="stake1Result">R$ 0,00</strong>
-                            </div>
-                            <div class="result-item">
-                                <span>Aposta no Resultado 2:</span>
-                                <strong id="stake2Result">R$ 0,00</strong>
-                            </div>
-                             <div class="result-item" id="stake3ResultContainer" style="display: none;">
-                                <span>Aposta no Resultado 3:</span>
-                                <strong id="stake3Result">R$ 0,00</strong>
-                            </div>
-                            <hr>
-                             <div class="result-item total-profit">
-                                <span>Lucro Total Garantido:</span>
-                                <strong id="profitResult">R$ 0,00</strong>
-                            </div>
-                            <div class="result-item total-profit">
-                                <span>Retorno sobre Investimento (ROI):</span>
-                                <strong id="roiResult">0.00%</strong>
-                            </div>
-                        </div>
+                    <div class="calculator-table-container">
+                        <table class="calculator-table">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Odds</th>
+                                    <th>Investimento</th>
+                                    <th>Retorno</th>
+                                    <th>Ação</th>
+                                </tr>
+                            </thead>
+                            <tbody id="calculator-rows">
+                                <!-- As linhas serão adicionadas via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="calculator-actions">
+                        <button id="addRowBtn" class="button-primary">Adicionar Mais Linhas</button>
+                        <button id="resetCalcBtn" class="button-secondary">Reiniciar Calculadora</button>
                     </div>
                 </div>
             </section>
