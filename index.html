@@ -46,10 +46,10 @@
                 <span>LS Betting</span>
             </div>
             <nav class="main-nav">
-                <a href="#" class="nav-link active">Início</a>
+                <a href="#" id="inicioBtn" class="nav-link active">Início</a>
                 <a href="#" id="novaApostaHeaderBtn" class="nav-link">+ Nova Aposta</a>
                 <a href="#" class="nav-link">Balanços</a>
-                <a href="#" class="nav-link">Calculadora</a>
+                <a href="#" id="calculadoraBtn" class="nav-link">Calculadora</a>
             </nav>
             <div class="user-menu">
                 <div id="subscription-status" class="subscription-status"></div>
@@ -78,106 +78,172 @@
                 <div id="admin-message" class="admin-message"></div>
             </section>
 
-            <section class="card">
-                <div class="card-header">
-                    <h2>Filtros Avançados</h2>
-                    <button id="limparFiltrosBtn" class="link-button">Limpar Filtros</button>
-                </div>
-                <div class="filters">
-                    <input type="text" id="filtroNome" placeholder="🔎 Nome">
-                    <input type="text" placeholder="Selecionar período...">
-                    <select id="filtroCasa">
-                        <option value="todas">Todas as Casas</option>
-                    </select>
-                    <select id="filtroTipo">
-                        <option value="todos">Todos os Tipos</option>
-                        <option value="Normal">Normal</option>
-                        <option value="Multipla">Múltipla</option>
-                        <option value="Surebet">Surebet</option>
-                        <option value="Rodadas Gratis">Rodadas Gratis</option>
-                        <option value="Metodos">Metodos</option>
-                        <option value="Freebet">Freebet</option>
-                    </select>
-                    <select id="filtroStatus">
-                        <option value="todos">Todos os Status</option>
-                        <option value="Concluído">Concluído</option>
-                        <option value="Em andamento">Em andamento</option>
-                        <option value="Aguardando Freebet">Aguardando Freebet</option>
-                    </select>
-                </div>
-            </section>
+            <!-- CONTEÚDO DO DASHBOARD -->
+            <div id="dashboard-content">
+                <section class="card">
+                    <div class="card-header">
+                        <h2>Filtros Avançados</h2>
+                        <button id="limparFiltrosBtn" class="link-button">Limpar Filtros</button>
+                    </div>
+                    <div class="filters">
+                        <input type="text" id="filtroNome" placeholder="🔎 Nome">
+                        <input type="text" placeholder="Selecionar período...">
+                        <select id="filtroCasa">
+                            <option value="todas">Todas as Casas</option>
+                        </select>
+                        <select id="filtroTipo">
+                            <option value="todos">Todos os Tipos</option>
+                            <option value="Normal">Normal</option>
+                            <option value="Multipla">Múltipla</option>
+                            <option value="Surebet">Surebet</option>
+                            <option value="Rodadas Gratis">Rodadas Gratis</option>
+                            <option value="Metodos">Metodos</option>
+                            <option value="Freebet">Freebet</option>
+                        </select>
+                        <select id="filtroStatus">
+                            <option value="todos">Todos os Status</option>
+                            <option value="Concluído">Concluído</option>
+                            <option value="Em andamento">Em andamento</option>
+                            <option value="Aguardando Freebet">Aguardando Freebet</option>
+                        </select>
+                    </div>
+                </section>
 
-            <div class="summary-container">
-                <section class="card stats-summary-card">
-                    <div class="stat-item">
-                        <div class="stat-info">
-                            <div class="stat-icon icon-green">$</div>
-                            <div class="stat-text">
-                                <p>Lucro Total</p>
+                <div class="summary-container">
+                    <section class="card stats-summary-card">
+                        <div class="stat-item">
+                            <div class="stat-info">
+                                <div class="stat-icon icon-green">$</div>
+                                <div class="stat-text">
+                                    <p>Lucro Total</p>
+                                </div>
                             </div>
+                            <div id="lucroTotalValue" class="stat-value text-green">R$ 0,00</div>
                         </div>
-                        <div id="lucroTotalValue" class="stat-value text-green">R$ 0,00</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-info">
-                            <div class="stat-icon icon-yellow">📈</div>
-                            <div class="stat-text">
-                                <p>Lucro Médio</p>
+                        <div class="stat-item">
+                            <div class="stat-info">
+                                <div class="stat-icon icon-yellow">📈</div>
+                                <div class="stat-text">
+                                    <p>Lucro Médio</p>
+                                </div>
                             </div>
+                            <div id="lucroMedioValue" class="stat-value text-yellow">R$ 0,00</div>
                         </div>
-                        <div id="lucroMedioValue" class="stat-value text-yellow">R$ 0,00</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-info">
-                            <div class="stat-icon icon-yellow">🕒</div>
-                            <div class="stat-text">
-                                <p>Apostas em Andamento</p>
+                        <div class="stat-item">
+                            <div class="stat-info">
+                                <div class="stat-icon icon-yellow">🕒</div>
+                                <div class="stat-text">
+                                    <p>Apostas em Andamento</p>
+                                </div>
                             </div>
+                            <div id="apostasAndamentoValue" class="stat-value text-light">0</div>
                         </div>
-                        <div id="apostasAndamentoValue" class="stat-value text-light">0</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-info">
-                            <div class="stat-icon icon-green">✅</div>
-                            <div class="stat-text">
-                                <p>Apostas Concluídas</p>
+                        <div class="stat-item">
+                            <div class="stat-info">
+                                <div class="stat-icon icon-green">✅</div>
+                                <div class="stat-text">
+                                    <p>Apostas Concluídas</p>
+                                </div>
                             </div>
+                            <div id="apostasConcluidasValue" class="stat-value text-light">0</div>
                         </div>
-                        <div id="apostasConcluidasValue" class="stat-value text-light">0</div>
+                    </section>
+                    <section class="card chart-card">
+                        <div class="chart-header">
+                            <h3 id="chartTitle">Lucro Diário</h3>
+                            <div class="chart-toggle"><button id="chartDailyBtn" class="chart-toggle-btn active">D</button><button id="chartMonthlyBtn" class="chart-toggle-btn">M</button></div>
+                        </div>
+                        <canvas id="graficoLucroDiario"></canvas>
+                    </section>
+                    <section class="card notes-card">
+                        <h3>Notas</h3>
+                        <textarea id="notasTextarea" placeholder="Clique para adicionar nota"></textarea>
+                    </section>
+                </div>
+
+                <section class="card">
+                    <div class="card-header">
+                        <h2>Listagem de Apostas</h2>
+                        <div class="actions"><button id="novaApostaBtn" class="button-primary">Nova Aposta</button><button class="button-icon">📥</button><button class="button-icon button-danger">🗑️</button></div>
                     </div>
-                </section>
-                <section class="card chart-card">
-                    <div class="chart-header">
-                        <h3 id="chartTitle">Lucro Diário</h3>
-                        <div class="chart-toggle"><button id="chartDailyBtn" class="chart-toggle-btn active">D</button><button id="chartMonthlyBtn" class="chart-toggle-btn">M</button></div>
+                    <div class="bets-list">
+                        <div class="bets-grid-container grid-header">
+                            <div class="grid-cell">ID</div>
+                            <div class="grid-cell">Data</div>
+                            <div class="grid-cell">Nome</div>
+                            <div class="grid-cell">Casa</div>
+                            <div class="grid-cell">Obs</div>
+                            <div class="grid-cell">Resultado</div>
+                            <div class="grid-cell">Tipo</div>
+                            <div class="grid-cell">Status</div>
+                            <div class="grid-cell">Ações</div>
+                        </div>
                     </div>
-                    <canvas id="graficoLucroDiario"></canvas>
-                </section>
-                <section class="card notes-card">
-                    <h3>Notas</h3>
-                    <textarea id="notasTextarea" placeholder="Clique para adicionar nota"></textarea>
                 </section>
             </div>
+            <!-- FIM DO CONTEÚDO DO DASHBOARD -->
 
-            <section class="card">
+            <!-- CONTEÚDO DA CALCULADORA -->
+            <section id="calculator-panel" class="card" style="display: none;">
                 <div class="card-header">
-                    <h2>Listagem de Apostas</h2>
-                    <div class="actions"><button id="novaApostaBtn" class="button-primary">Nova Aposta</button><button class="button-icon">📥</button><button class="button-icon button-danger">🗑️</button></div>
+                    <h2>Calculadora de Surebet (Arbitragem)</h2>
                 </div>
-                <div class="bets-list">
-                    <div class="bets-grid-container grid-header">
-                        <div class="grid-cell">ID</div>
-                        <div class="grid-cell">Data</div>
-                        <div class="grid-cell">Nome</div>
-                        <div class="grid-cell">Casa</div>
-                        <div class="grid-cell">Obs</div>
-                        <div class="grid-cell">Resultado</div>
-                        <div class="grid-cell">Tipo</div>
-                        <div class="grid-cell">Status</div>
-                        <div class="grid-cell">Ações</div>
+                <div class="calculator-content">
+                    <div class="calculator-inputs">
+                        <div class="form-group">
+                            <label for="totalStake">Valor Total a ser Apostado (R$)</label>
+                            <input type="number" id="totalStake" placeholder="Ex: 1000">
+                        </div>
+                        <div class="form-group-inline">
+                            <label>Número de Resultados</label>
+                            <div class="toggle-switch">
+                                <button id="outcome2Btn" class="toggle-btn active">2</button>
+                                <button id="outcome3Btn" class="toggle-btn">3</button>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="odd1">Odd do Resultado 1</label>
+                            <input type="number" step="0.01" id="odd1" placeholder="Ex: 2.10">
+                        </div>
+                        <div class="form-group">
+                            <label for="odd2">Odd do Resultado 2</label>
+                            <input type="number" step="0.01" id="odd2" placeholder="Ex: 2.05">
+                        </div>
+                        <div class="form-group" id="outcome3Group" style="display: none;">
+                            <label for="odd3">Odd do Resultado 3</label>
+                            <input type="number" step="0.01" id="odd3" placeholder="Ex: 3.50">
+                        </div>
+                    </div>
+                    <div class="calculator-results">
+                        <h3>Resultados</h3>
+                        <div id="result-message" class="result-message">Preencha os campos para calcular</div>
+                        <div id="result-details" style="display: none;">
+                            <div class="result-item">
+                                <span>Aposta no Resultado 1:</span>
+                                <strong id="stake1Result">R$ 0,00</strong>
+                            </div>
+                            <div class="result-item">
+                                <span>Aposta no Resultado 2:</span>
+                                <strong id="stake2Result">R$ 0,00</strong>
+                            </div>
+                             <div class="result-item" id="stake3ResultContainer" style="display: none;">
+                                <span>Aposta no Resultado 3:</span>
+                                <strong id="stake3Result">R$ 0,00</strong>
+                            </div>
+                            <hr>
+                             <div class="result-item total-profit">
+                                <span>Lucro Total Garantido:</span>
+                                <strong id="profitResult">R$ 0,00</strong>
+                            </div>
+                            <div class="result-item total-profit">
+                                <span>Retorno sobre Investimento (ROI):</span>
+                                <strong id="roiResult">0.00%</strong>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </section>
+            <!-- FIM DO CONTEÚDO DA CALCULADORA -->
         </div>
 
         <div class="modal-overlay" id="modalNovaAposta">
@@ -186,43 +252,67 @@
                     <div class="modal-header">
                         <h2>Nova Aposta</h2><button type="button" class="close-button" id="fecharModalBtn">&times;</button>
                     </div>
-                    <fieldset>
-                        <legend><span>1</span> Informações Gerais</legend>
-                        <div class="form-grid-double">
-                            <div><label for="data">Data</label><input type="date" id="data" required></div>
-                            <div><label for="nomeConta">Nome (Conta)</label><input type="text" id="nomeConta" placeholder="Nome (Conta)"></div>
-                        </div>
-                        <div class="form-grid-double">
-                            <div><label for="obs1">Observação</label><input type="text" id="obs1" placeholder="Observações 1"></div>
-                            <div><label for="obs2">Observação 2</label><input type="text" id="obs2" placeholder="Observações 2"></div>
-                        </div>
-                        <div><label for="tipoAposta">Tipo de aposta</label><select id="tipoAposta">
-                                <option value="Normal">Normal</option>
-                                <option value="Multipla">Múltipla</option>
-                                <option value="Surebet">Surebet</option>
-                                <option value="Rodadas Gratis">Rodadas Gratis</option>
-                                <option value="Metodos">Metodos</option>
-                                <option value="Freebet">Freebet</option>
-                            </select>
-                        </div>
-                    </fieldset>
-                    <fieldset>
-                        <legend><span>2</span> Dados da Aposta</legend>
-                        <div class="form-grid-double">
-                            <div><label for="casaApostas">Casa de apostas</label><input type="text" id="casaApostas" placeholder="Nome da casa de apostas"></div>
-                            <div><label for="lucroTotalPrevisto">Valor Apostado (R$)</label><input type="number" step="0.01" id="lucroTotalPrevisto" placeholder="Ex: 150.00"></div>
-                        </div>
-                    </fieldset>
-                    <fieldset>
-                        <legend><span>3</span> Gestão de Resultados</legend>
-                        <div><label for="resultadoLucroTotal">Lucro (Resultado Final) (R$)</label><input type="number" step="0.01" id="resultadoLucroTotal" placeholder="Ex: 100.00 ou -50.00"></div><label style="margin-top: 1rem;">Status da Aposta</label>
-                        <div class="status-options"><input type="radio" id="statusConcluido" name="status" value="Concluído" checked><label for="statusConcluido">✅ Concluído</label><input type="radio" id="statusAndamento" name="status" value="Em andamento"><label for="statusAndamento">🕒 Em andamento</label><input type="radio" id="statusFreebet" name="status" value="Aguardando Freebet"><label for="statusFreebet">🔄 Aguardando Freebet</label></div>
-                    </fieldset>
+                    <div class="modal-body">
+                        <fieldset>
+                            <legend><span>1</span> Informações Gerais</legend>
+                            <div class="form-grid-double">
+                                <div><label for="data">Data</label><input type="date" id="data" required></div>
+                                <div><label for="nomeConta">Nome (Conta)</label><input type="text" id="nomeConta" placeholder="Nome (Conta)"></div>
+                            </div>
+                            <div>
+                                <label for="obs1">Observação</label><input type="text" id="obs1" placeholder="Observações da aposta">
+                            </div>
+                            <div>
+                                <label for="tipoAposta">Tipo de aposta</label>
+                                <select id="tipoAposta">
+                                    <option value="Normal">Normal</option>
+                                    <option value="Multipla">Múltipla</option>
+                                    <option value="Surebet">Surebet</option>
+                                    <option value="Rodadas Gratis">Rodadas Gratis</option>
+                                    <option value="Metodos">Metodos</option>
+                                    <option value="Freebet">Freebet</option>
+                                </select>
+                            </div>
+                        </fieldset>
+                        <fieldset>
+                            <legend><span>2</span> Dados da Aposta</legend>
+                            <div class="form-grid-double">
+                                <div><label for="casaApostas">Casa de apostas</label><input type="text" id="casaApostas" placeholder="Nome da casa de apostas"></div>
+                                <div><label for="lucroTotalPrevisto">Valor Apostado (R$)</label><input type="number" step="0.01" id="lucroTotalPrevisto" placeholder="Ex: 150.00"></div>
+                            </div>
+                        </fieldset>
+                        <fieldset>
+                            <legend><span>3</span> Gestão de Resultados</legend>
+                            <div><label for="resultadoLucroTotal">Lucro (Resultado Final) (R$)</label><input type="number" step="0.01" id="resultadoLucroTotal" placeholder="Ex: 100.00 ou -50.00"></div><label style="margin-top: 1rem;">Status da Aposta</label>
+                            <div class="status-options"><input type="radio" id="statusConcluido" name="status" value="Concluído" checked><label for="statusConcluido">✅ Concluído</label><input type="radio" id="statusAndamento" name="status" value="Em andamento"><label for="statusAndamento">🕒 Em andamento</label><input type="radio" id="statusFreebet" name="status" value="Aguardando Freebet"><label for="statusFreebet">🔄 Aguardando Freebet</label></div>
+                        </fieldset>
+                    </div>
                     <div class="modal-footer"><button type="button" class="button-secondary" id="cancelarBtn">Cancelar</button><button type="submit" class="button-primary">Salvar Aposta</button></div>
                 </form>
             </div>
         </div>
     </div>
+
+    <!-- Modal de Assinatura Expirada -->
+    <div class="modal-overlay" id="modalAssinaturaExpirada">
+        <div class="modal-content modal-expirado">
+            <div class="modal-header">
+                <h2>Assinatura Expirada</h2>
+            </div>
+            <div class="modal-body">
+                <p>Olá, seu período de teste ou assinatura expirou.</p>
+                <p>Caso queira renovar, o valor é de apenas <strong>R$10,00 mensais</strong>.</p>
+                <div class="contato-info">
+                    <strong>Contato para renovação (WhatsApp):</strong>
+                    <a href="https://wa.me/5519995207301" target="_blank">(19) 99520-7301</a>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="logoutExpiradoBtn" class="button-secondary">Sair</button>
+            </div>
+        </div>
+    </div>
+
     <script src="app.js"></script>
 </body>
 </html>
