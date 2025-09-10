@@ -712,107 +712,105 @@ document.addEventListener('DOMContentLoaded', () => {
             submitButton.textContent = 'Salvar Aposta';
         });
 
-        // --- LÓGICA DA CALCULADORA DE SUREBET ---
-        function setupSurebetCalculator() {
-            const totalStakeInput = document.getElementById('totalStake');
-            const odd1Input = document.getElementById('odd1');
-            const odd2Input = document.getElementById('odd2');
-            const odd3Input = document.getElementById('odd3');
-            const outcome2Btn = document.getElementById('outcome2Btn');
-            const outcome3Btn = document.getElementById('outcome3Btn');
-            const outcome3Group = document.getElementById('outcome3Group');
-            const stake3ResultContainer = document.getElementById('stake3ResultContainer');
+        // --- LÓGICA DA CALCULADORA DE DUTCHING ---
+        function setupDutchingCalculator() {
+            const totalInvestmentInput = document.getElementById('totalInvestment');
+            const calculatorRowsContainer = document.getElementById('calculator-rows');
+            const addRowBtn = document.getElementById('addRowBtn');
+            const resetCalcBtn = document.getElementById('resetCalcBtn');
+            const summaryProfitEl = document.getElementById('summaryProfit');
+            const summaryReturnEl = document.getElementById('summaryReturn');
+            
+            const formatCurrency = (value) => value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 
-            const resultMessage = document.getElementById('result-message');
-            const resultDetails = document.getElementById('result-details');
-            const stake1Result = document.getElementById('stake1Result');
-            const stake2Result = document.getElementById('stake2Result');
-            const stake3Result = document.getElementById('stake3Result');
-            const profitResult = document.getElementById('profitResult');
-            const roiResult = document.getElementById('roiResult');
+            function calculateDutching() {
+                const totalInvestment = parseFloat(totalInvestmentInput.value) || 0;
+                const rows = Array.from(calculatorRowsContainer.querySelectorAll('tr'));
+                const odds = rows.map(row => parseFloat(row.querySelector('.odd-input').value) || 0);
 
-            let numOutcomes = 2;
-
-            function formatCurrency(value) {
-                return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-            }
-
-            function calculateSurebet() {
-                const totalStake = parseFloat(totalStakeInput.value) || 0;
-                const odd1 = parseFloat(odd1Input.value) || 0;
-                const odd2 = parseFloat(odd2Input.value) || 0;
-                const odd3 = numOutcomes === 3 ? (parseFloat(odd3Input.value) || 0) : 0;
-
-                if (totalStake <= 0 || odd1 <= 1 || odd2 <= 1 || (numOutcomes === 3 && odd3 <= 1)) {
-                    resultDetails.style.display = 'none';
-                    resultMessage.style.display = 'block';
-                    resultMessage.textContent = 'Preencha todos os campos com valores válidos.';
-                    resultMessage.className = 'result-message';
+                if (totalInvestment <= 0 || odds.some(odd => odd <= 0)) {
+                    summaryProfitEl.textContent = formatCurrency(0);
+                    summaryReturnEl.textContent = formatCurrency(0);
+                    rows.forEach(row => {
+                        row.querySelector('.stake-output').textContent = formatCurrency(0);
+                        row.querySelector('.return-output').textContent = formatCurrency(0);
+                    });
                     return;
                 }
+                
+                const impliedProbabilities = odds.map(odd => (1 / odd) * 100);
+                const totalImpliedProbability = impliedProbabilities.reduce((sum, prob) => sum + prob, 0);
 
-                const prob1 = 1 / odd1;
-                const prob2 = 1 / odd2;
-                const prob3 = numOutcomes === 3 ? (1 / odd3) : 0;
-                const totalProb = prob1 + prob2 + prob3;
+                if (totalImpliedProbability === 0) return;
 
-                if (totalProb < 1) { // Surebet exists!
-                    const stake1 = (totalStake * prob1) / totalProb;
-                    const stake2 = (totalStake * prob2) / totalProb;
-                    const profit = (stake1 * odd1) - totalStake;
-                    const roi = (profit / totalStake) * 100;
+                const stakes = impliedProbabilities.map(prob => (totalInvestment * prob) / totalImpliedProbability);
+                const returns = stakes.map((stake, index) => stake * odds[index]);
+                
+                const avgReturn = returns.length > 0 ? returns[0] : 0;
+                const profit = avgReturn - totalInvestment;
 
-                    stake1Result.textContent = formatCurrency(stake1);
-                    stake2Result.textContent = formatCurrency(stake2);
-                    profitResult.textContent = formatCurrency(profit);
-                    roiResult.textContent = `${roi.toFixed(2)}%`;
-                    
-                    if (numOutcomes === 3) {
-                        const stake3 = (totalStake * prob3) / totalProb;
-                        stake3Result.textContent = formatCurrency(stake3);
-                        stake3ResultContainer.style.display = 'flex';
-                    } else {
-                        stake3ResultContainer.style.display = 'none';
-                    }
+                summaryProfitEl.textContent = formatCurrency(profit);
+                summaryReturnEl.textContent = formatCurrency(avgReturn);
+                summaryProfitEl.classList.toggle('profit', profit > 0);
+                summaryProfitEl.classList.toggle('loss', profit < 0);
 
-                    resultMessage.textContent = `Surebet encontrado! Lucro de ${roi.toFixed(2)}%`;
-                    resultMessage.className = 'result-message profit-positive';
-                    resultDetails.style.display = 'block';
 
-                } else { // No surebet
-                    const lossPercentage = (totalProb - 1) * 100;
-                    resultDetails.style.display = 'none';
-                    resultMessage.style.display = 'block';
-                    resultMessage.textContent = `Não é uma surebet. Perda de ${lossPercentage.toFixed(2)}%.`;
-                    resultMessage.className = 'result-message profit-negative';
-                }
+                rows.forEach((row, index) => {
+                    row.querySelector('.stake-output').textContent = formatCurrency(stakes[index]);
+                    row.querySelector('.return-output').textContent = formatCurrency(returns[index]);
+                });
             }
 
-            outcome2Btn.addEventListener('click', () => {
-                numOutcomes = 2;
-                outcome2Btn.classList.add('active');
-                outcome3Btn.classList.remove('active');
-                outcome3Group.style.display = 'none';
-                calculateSurebet();
-            });
+            function createRow(index) {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${index}º</td>
+                    <td><input type="number" step="0.01" class="odd-input" placeholder="Ex: 2.20"></td>
+                    <td class="stake-output">${formatCurrency(0)}</td>
+                    <td class="return-output">${formatCurrency(0)}</td>
+                    <td><button class="link-button remove-row-btn">Remover</button></td>
+                `;
+                row.querySelector('.odd-input').addEventListener('input', calculateDutching);
+                row.querySelector('.remove-row-btn').addEventListener('click', () => {
+                    row.remove();
+                    updateRowNumbers();
+                    calculateDutching();
+                });
+                return row;
+            }
+            
+            function updateRowNumbers() {
+                const rows = calculatorRowsContainer.querySelectorAll('tr');
+                rows.forEach((row, index) => {
+                    row.querySelector('td:first-child').textContent = `${index + 1}º`;
+                });
+            }
 
-            outcome3Btn.addEventListener('click', () => {
-                numOutcomes = 3;
-                outcome3Btn.classList.add('active');
-                outcome2Btn.classList.remove('active');
-                outcome3Group.style.display = 'block';
-                calculateSurebet();
-            });
+            function addRow() {
+                const rowCount = calculatorRowsContainer.children.length;
+                calculatorRowsContainer.appendChild(createRow(rowCount + 1));
+            }
+            
+            function resetCalculator() {
+                totalInvestmentInput.value = '';
+                calculatorRowsContainer.innerHTML = '';
+                addRow();
+                addRow();
+                calculateDutching();
+            }
 
-            [totalStakeInput, odd1Input, odd2Input, odd3Input].forEach(input => {
-                input.addEventListener('input', calculateSurebet);
-            });
+            addRowBtn.addEventListener('click', addRow);
+            resetCalcBtn.addEventListener('click', resetCalculator);
+            totalInvestmentInput.addEventListener('input', calculateDutching);
+            
+            resetCalculator();
         }
+
 
         // --- INICIALIZAÇÃO DAS PARTES DA APLICAÇÃO ---
         carregarApostas();
         carregarNotas();
-        setupSurebetCalculator();
+        setupDutchingCalculator();
     }
 
     // --- INICIALIZAÇÃO GERAL ---
