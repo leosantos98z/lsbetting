@@ -199,6 +199,8 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
+        navigateTo('dashboard'); // Garante que a tela inicial seja exibida corretamente
+
         inicioBtn.addEventListener('click', (e) => {
             e.preventDefault();
             navigateTo('dashboard');
@@ -811,4 +813,5 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- INICIALIZAÇÃO GERAL ---
     checkUserSession();
 });
+
 
