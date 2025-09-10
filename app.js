@@ -725,39 +725,54 @@ document.addEventListener('DOMContentLoaded', () => {
 
             function calculateDutching() {
                 const totalInvestment = parseFloat(totalInvestmentInput.value) || 0;
-                const rows = Array.from(calculatorRowsContainer.querySelectorAll('tr'));
-                const odds = rows.map(row => parseFloat(row.querySelector('.odd-input').value) || 0);
+                const allRows = Array.from(calculatorRowsContainer.querySelectorAll('tr'));
 
-                if (totalInvestment <= 0 || odds.some(odd => odd <= 0)) {
-                    summaryProfitEl.textContent = formatCurrency(0);
-                    summaryReturnEl.textContent = formatCurrency(0);
-                    rows.forEach(row => {
+                const oddsWithRows = allRows.map(row => ({
+                    odd: parseFloat(row.querySelector('.odd-input').value) || 0,
+                    row: row
+                }));
+
+                const validEntries = oddsWithRows.filter(entry => entry.odd > 0);
+
+                if (totalInvestment <= 0 || validEntries.length === 0) {
+                    allRows.forEach(row => {
                         row.querySelector('.stake-output').textContent = formatCurrency(0);
                         row.querySelector('.return-output').textContent = formatCurrency(0);
                     });
+                    summaryProfitEl.textContent = formatCurrency(0);
+                    summaryReturnEl.textContent = formatCurrency(0);
+                    summaryProfitEl.className = 'summary-item';
                     return;
                 }
+
+                const validOdds = validEntries.map(entry => entry.odd);
                 
-                const impliedProbabilities = odds.map(odd => (1 / odd) * 100);
+                const impliedProbabilities = validOdds.map(odd => (1 / odd) * 100);
                 const totalImpliedProbability = impliedProbabilities.reduce((sum, prob) => sum + prob, 0);
 
                 if (totalImpliedProbability === 0) return;
 
                 const stakes = impliedProbabilities.map(prob => (totalInvestment * prob) / totalImpliedProbability);
-                const returns = stakes.map((stake, index) => stake * odds[index]);
+                const returns = stakes.map((stake, index) => stake * validOdds[index]);
                 
                 const avgReturn = returns.length > 0 ? returns[0] : 0;
                 const profit = avgReturn - totalInvestment;
 
                 summaryProfitEl.textContent = formatCurrency(profit);
                 summaryReturnEl.textContent = formatCurrency(avgReturn);
-                summaryProfitEl.classList.toggle('profit', profit > 0);
-                summaryProfitEl.classList.toggle('loss', profit < 0);
+                summaryProfitEl.classList.remove('profit', 'loss');
+                if (profit > 0) summaryProfitEl.classList.add('profit');
+                if (profit < 0) summaryProfitEl.classList.add('loss');
 
-
-                rows.forEach((row, index) => {
-                    row.querySelector('.stake-output').textContent = formatCurrency(stakes[index]);
-                    row.querySelector('.return-output').textContent = formatCurrency(returns[index]);
+                oddsWithRows.forEach(entry => {
+                    const validIndex = validEntries.findIndex(valid => valid.row === entry.row);
+                    if (validIndex !== -1) {
+                        entry.row.querySelector('.stake-output').textContent = formatCurrency(stakes[validIndex]);
+                        entry.row.querySelector('.return-output').textContent = formatCurrency(returns[validIndex]);
+                    } else {
+                        entry.row.querySelector('.stake-output').textContent = formatCurrency(0);
+                        entry.row.querySelector('.return-output').textContent = formatCurrency(0);
+                    }
                 });
             }
 
@@ -772,9 +787,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 `;
                 row.querySelector('.odd-input').addEventListener('input', calculateDutching);
                 row.querySelector('.remove-row-btn').addEventListener('click', () => {
-                    row.remove();
-                    updateRowNumbers();
-                    calculateDutching();
+                    if (calculatorRowsContainer.children.length > 1) {
+                        row.remove();
+                        updateRowNumbers();
+                        calculateDutching();
+                    }
                 });
                 return row;
             }
