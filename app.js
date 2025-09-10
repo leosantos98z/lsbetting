@@ -814,4 +814,3 @@ document.addEventListener('DOMContentLoaded', () => {
     checkUserSession();
 });
 
-
