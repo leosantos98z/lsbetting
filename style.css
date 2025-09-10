@@ -888,10 +888,11 @@ hr {
     }
 
     /* --- MODAL DE NOVA APOSTA --- */
-    #modalNovaAposta .modal-content {
+    #modalNovaAposta.active .modal-content {
     width: 95%;
-    max-height: 85vh; /* Limita a altura máxima do modal */
+    max-height: calc(100vh - 40px); /* Garante uma margem superior/inferior */
     padding: 0;
+    margin: 20px 0; /* Adiciona a margem */
 }
     
     #modalNovaAposta .modal-header,
@@ -927,5 +928,6 @@ hr {
         grid-template-columns: 1fr;
     }
 }
+
 
 
