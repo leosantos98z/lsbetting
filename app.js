@@ -31,6 +31,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const userEmailDisplay = document.getElementById('userEmailDisplay');
     const subscriptionStatusDisplay = document.getElementById('subscription-status');
     const appContent = document.getElementById('app-content');
+    const modalAssinaturaExpirada = document.getElementById('modalAssinaturaExpirada');
+
 
     // --- LÓGICA DE AUTENTICAÇÃO ---
 
@@ -61,6 +63,10 @@ document.addEventListener('DOMContentLoaded', () => {
             const hoje = new Date();
             const diasRestantes = Math.ceil((expirationDate - hoje) / (1000 * 60 * 60 * 24));
 
+            authContainer.style.display = 'none';
+            appContainer.style.display = 'block';
+            userEmailDisplay.textContent = session.user.email;
+
             if (diasRestantes > 0) {
                 subscriptionStatusDisplay.textContent = `${diasRestantes} dias restantes`;
                 subscriptionStatusDisplay.className = 'subscription-status active';
@@ -69,16 +75,29 @@ document.addEventListener('DOMContentLoaded', () => {
             } else {
                 subscriptionStatusDisplay.textContent = 'Plano Expirado';
                 subscriptionStatusDisplay.className = 'subscription-status expired';
-                appContent.style.display = 'none'; // Esconde a aplicação
-            }
+                appContent.style.display = 'none'; // Esconde a aplicação principal
 
-            authContainer.style.display = 'none';
-            appContainer.style.display = 'block';
-            userEmailDisplay.textContent = session.user.email;
+                // Mostra o modal de assinatura expirada
+                if (modalAssinaturaExpirada) {
+                    modalAssinaturaExpirada.classList.add('active');
+                }
+            }
 
         } else {
             showAuthScreen();
         }
+    }
+
+    // Adiciona listener ao botão de logout do modal de expiração
+    const logoutExpiradoBtn = document.getElementById('logoutExpiradoBtn');
+    if (logoutExpiradoBtn) {
+        logoutExpiradoBtn.addEventListener('click', async () => {
+            await supabaseClient.auth.signOut();
+            if (modalAssinaturaExpirada) {
+                modalAssinaturaExpirada.classList.remove('active');
+            }
+            checkUserSession();
+        });
     }
 
     function showAuthScreen() {
@@ -155,6 +174,40 @@ document.addEventListener('DOMContentLoaded', () => {
         const chartMonthlyBtn = document.getElementById('chartMonthlyBtn');
         const chartTitle = document.getElementById('chartTitle');
         const notasTextarea = document.getElementById('notasTextarea');
+
+        // --- NAVEGAÇÃO ---
+        const inicioBtn = document.getElementById('inicioBtn');
+        const calculadoraBtn = document.getElementById('calculadoraBtn');
+        const dashboardContent = document.getElementById('dashboard-content');
+        const calculatorPanel = document.getElementById('calculator-panel');
+
+        function navigateTo(page) {
+            // Esconde todos os painéis
+            dashboardContent.style.display = 'none';
+            calculatorPanel.style.display = 'none';
+
+            // Remove a classe 'active' de todos os links de navegação
+            inicioBtn.classList.remove('active');
+            calculadoraBtn.classList.remove('active');
+
+            if (page === 'dashboard') {
+                dashboardContent.style.display = 'block';
+                inicioBtn.classList.add('active');
+            } else if (page === 'calculator') {
+                calculatorPanel.style.display = 'block';
+                calculadoraBtn.classList.add('active');
+            }
+        }
+
+        inicioBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            navigateTo('dashboard');
+        });
+
+        calculadoraBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            navigateTo('calculator');
+        });
 
         // PAINEL DE ADMIN
         const adminPanel = document.getElementById('admin-panel');
@@ -281,21 +334,20 @@ document.addEventListener('DOMContentLoaded', () => {
                     const resultadoClasse = resultado > 0 ? 'resultado-positivo' : resultado < 0 ? 'resultado-negativo' : '';
                     const statusClass = (aposta.status || '').toLowerCase().replace(/ /g, '-').replace('ú', 'u');
 
-                    // MODIFICADO: Adicionado 'data-label' para responsividade
                     apostaElement.innerHTML = `
-                                <div class="grid-cell" data-label="ID">${aposta.id}</div>
-                                <div class="grid-cell" data-label="Data">${dataFormatada}</div>
-                                <div class="grid-cell" data-label="Nome">${aposta.nome_conta || '-'}</div>
-                                <div class="grid-cell" data-label="Casa">${aposta.casa_apostas || '-'}</div>
-                                <div class="grid-cell" data-label="Obs">${aposta.observacao1 || '-'}</div>
-                                <div class="grid-cell ${resultadoClasse}" data-label="Resultado">${resultado.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</div>
-                                <div class="grid-cell" data-label="Tipo">${aposta.tipo_aposta || '-'}</div>
-                                <div class="grid-cell" data-label="Status"><span class="status-badge status-${statusClass}">${aposta.status}</span></div>
-                                <div class="grid-cell action-buttons" data-label="Ações">
-                                    <button class="action-btn btn-edit" title="Editar Aposta" data-id="${aposta.id}">✏️</button>
-                                    <button class="action-btn btn-delete" title="Excluir Aposta" data-id="${aposta.id}">🗑️</button>
-                                </div>
-                            `;
+                        <div class="grid-cell" data-label="ID">${aposta.id}</div>
+                        <div class="grid-cell" data-label="Data">${dataFormatada}</div>
+                        <div class="grid-cell" data-label="Nome">${aposta.nome_conta || '-'}</div>
+                        <div class="grid-cell" data-label="Casa">${aposta.casa_apostas || '-'}</div>
+                        <div class="grid-cell" data-label="Obs">${aposta.observacao1 || '-'}</div>
+                        <div class="grid-cell ${resultadoClasse}" data-label="Resultado">${resultado.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</div>
+                        <div class="grid-cell" data-label="Tipo">${aposta.tipo_aposta || '-'}</div>
+                        <div class="grid-cell" data-label="Status"><span class="status-badge status-${statusClass}">${aposta.status}</span></div>
+                        <div class="grid-cell action-buttons" data-label="Ações">
+                            <button class="action-btn btn-edit" title="Editar Aposta" data-id="${aposta.id}">✏️</button>
+                            <button class="action-btn btn-delete" title="Excluir Aposta" data-id="${aposta.id}">🗑️</button>
+                        </div>
+                    `;
                     betsListContainer.appendChild(apostaElement);
                 });
             }
@@ -498,7 +550,6 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('data').value = aposta.data;
             document.getElementById('nomeConta').value = aposta.nome_conta;
             document.getElementById('obs1').value = aposta.observacao1;
-            document.getElementById('obs2').value = aposta.observacao2;
             document.getElementById('tipoAposta').value = aposta.tipo_aposta;
             document.getElementById('casaApostas').value = aposta.casa_apostas;
             document.getElementById('lucroTotalPrevisto').value = aposta.valor_lucro_total_previsto;
@@ -637,7 +688,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 data: document.getElementById('data').value,
                 nome_conta: document.getElementById('nomeConta').value,
                 observacao1: document.getElementById('obs1').value,
-                observacao2: document.getElementById('obs2').value,
                 tipo_aposta: document.getElementById('tipoAposta').value,
                 casa_apostas: document.getElementById('casaApostas').value,
                 valor_lucro_total_previsto: parseFloat(document.getElementById('lucroTotalPrevisto').value) || 0,
@@ -655,11 +705,110 @@ document.addEventListener('DOMContentLoaded', () => {
             submitButton.textContent = 'Salvar Aposta';
         });
 
-        // --- 4. INICIALIZAÇÃO DA APLICAÇÃO ---
+        // --- LÓGICA DA CALCULADORA DE SUREBET ---
+        function setupSurebetCalculator() {
+            const totalStakeInput = document.getElementById('totalStake');
+            const odd1Input = document.getElementById('odd1');
+            const odd2Input = document.getElementById('odd2');
+            const odd3Input = document.getElementById('odd3');
+            const outcome2Btn = document.getElementById('outcome2Btn');
+            const outcome3Btn = document.getElementById('outcome3Btn');
+            const outcome3Group = document.getElementById('outcome3Group');
+            const stake3ResultContainer = document.getElementById('stake3ResultContainer');
+
+            const resultMessage = document.getElementById('result-message');
+            const resultDetails = document.getElementById('result-details');
+            const stake1Result = document.getElementById('stake1Result');
+            const stake2Result = document.getElementById('stake2Result');
+            const stake3Result = document.getElementById('stake3Result');
+            const profitResult = document.getElementById('profitResult');
+            const roiResult = document.getElementById('roiResult');
+
+            let numOutcomes = 2;
+
+            function formatCurrency(value) {
+                return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+            }
+
+            function calculateSurebet() {
+                const totalStake = parseFloat(totalStakeInput.value) || 0;
+                const odd1 = parseFloat(odd1Input.value) || 0;
+                const odd2 = parseFloat(odd2Input.value) || 0;
+                const odd3 = numOutcomes === 3 ? (parseFloat(odd3Input.value) || 0) : 0;
+
+                if (totalStake <= 0 || odd1 <= 1 || odd2 <= 1 || (numOutcomes === 3 && odd3 <= 1)) {
+                    resultDetails.style.display = 'none';
+                    resultMessage.style.display = 'block';
+                    resultMessage.textContent = 'Preencha todos os campos com valores válidos.';
+                    resultMessage.className = 'result-message';
+                    return;
+                }
+
+                const prob1 = 1 / odd1;
+                const prob2 = 1 / odd2;
+                const prob3 = numOutcomes === 3 ? (1 / odd3) : 0;
+                const totalProb = prob1 + prob2 + prob3;
+
+                if (totalProb < 1) { // Surebet exists!
+                    const stake1 = (totalStake * prob1) / totalProb;
+                    const stake2 = (totalStake * prob2) / totalProb;
+                    const profit = (stake1 * odd1) - totalStake;
+                    const roi = (profit / totalStake) * 100;
+
+                    stake1Result.textContent = formatCurrency(stake1);
+                    stake2Result.textContent = formatCurrency(stake2);
+                    profitResult.textContent = formatCurrency(profit);
+                    roiResult.textContent = `${roi.toFixed(2)}%`;
+                    
+                    if (numOutcomes === 3) {
+                        const stake3 = (totalStake * prob3) / totalProb;
+                        stake3Result.textContent = formatCurrency(stake3);
+                        stake3ResultContainer.style.display = 'flex';
+                    } else {
+                        stake3ResultContainer.style.display = 'none';
+                    }
+
+                    resultMessage.textContent = `Surebet encontrado! Lucro de ${roi.toFixed(2)}%`;
+                    resultMessage.className = 'result-message profit-positive';
+                    resultDetails.style.display = 'block';
+
+                } else { // No surebet
+                    const lossPercentage = (totalProb - 1) * 100;
+                    resultDetails.style.display = 'none';
+                    resultMessage.style.display = 'block';
+                    resultMessage.textContent = `Não é uma surebet. Perda de ${lossPercentage.toFixed(2)}%.`;
+                    resultMessage.className = 'result-message profit-negative';
+                }
+            }
+
+            outcome2Btn.addEventListener('click', () => {
+                numOutcomes = 2;
+                outcome2Btn.classList.add('active');
+                outcome3Btn.classList.remove('active');
+                outcome3Group.style.display = 'none';
+                calculateSurebet();
+            });
+
+            outcome3Btn.addEventListener('click', () => {
+                numOutcomes = 3;
+                outcome3Btn.classList.add('active');
+                outcome2Btn.classList.remove('active');
+                outcome3Group.style.display = 'block';
+                calculateSurebet();
+            });
+
+            [totalStakeInput, odd1Input, odd2Input, odd3Input].forEach(input => {
+                input.addEventListener('input', calculateSurebet);
+            });
+        }
+
+        // --- INICIALIZAÇÃO DAS PARTES DA APLICAÇÃO ---
         carregarApostas();
         carregarNotas();
+        setupSurebetCalculator();
     }
 
     // --- INICIALIZAÇÃO GERAL ---
     checkUserSession();
 });
+
