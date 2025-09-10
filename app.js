@@ -599,9 +599,13 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
-        const abrirModal = () => modal.classList.add('active');
+        const abrirModal = () => {
+            modal.classList.add('active');
+            document.body.classList.add('modal-open');
+        }
         const fecharModal = () => {
             modal.classList.remove('active');
+            document.body.classList.remove('modal-open');
             formNovaAposta.reset();
             idApostaEmEdicao = null;
             document.querySelector('#modalNovaAposta h2').textContent = 'Nova Aposta';
@@ -690,6 +694,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 data: document.getElementById('data').value,
                 nome_conta: document.getElementById('nomeConta').value,
                 observacao1: document.getElementById('obs1').value,
+                observacao2: '', // Adicionado para evitar erro de not-null
                 tipo_aposta: document.getElementById('tipoAposta').value,
                 casa_apostas: document.getElementById('casaApostas').value,
                 valor_lucro_total_previsto: parseFloat(document.getElementById('lucroTotalPrevisto').value) || 0,
