@@ -347,6 +347,13 @@ textarea {
     max-height: 90vh;
 }
 
+.modal-content > form {
+    display: flex;
+    flex-direction: column;
+    flex: 1; /* Make the form grow and shrink */
+    min-height: 0; /* Allow the form to shrink below its content size */
+}
+
 .modal-header {
     display: flex;
     justify-content: space-between;
@@ -359,7 +366,7 @@ textarea {
 .modal-body {
     overflow-y: auto;
     padding: 1.5rem;
-    flex: 1; /* Faz o corpo do modal ocupar o espaço e ser rolável */
+    flex: 1;
 }
 
 .modal-body fieldset:last-of-type {
