@@ -700,6 +700,9 @@ label {
 .summary-item strong.profit {
     color: var(--green-color);
 }
+.summary-item strong.loss {
+    color: var(--red-color);
+}
 
 .calculator-table-container {
     overflow-x: auto;
