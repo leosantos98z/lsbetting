@@ -286,7 +286,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // --- FUNÇÕES DA APLICAÇÃO ---
         async function carregarApostas() {
-            let query = supabaseClient.from('apostas').select('*');
+            const { data: { user } } = await supabaseClient.auth.getUser();
+            if (!user) {
+                console.log("Utilizador não autenticado, não é possível carregar apostas.");
+                renderizarLista([]); // Limpa a lista se não houver utilizador
+                return;
+            }
+
+            let query = supabaseClient.from('apostas').select('*').eq('user_id', user.id);
+
             if (filtrosAtuais.nome) {
                 query = query.ilike('nome_conta', `%${filtrosAtuais.nome}%`);
             }
@@ -312,11 +320,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            renderizarLista(apostas);
-            atualizarPainelResumo(apostas);
-            renderizarGrafico(apostas);
+            renderizarLista(apostas || []);
+            atualizarPainelResumo(apostas || []);
+            renderizarGrafico(apostas || []);
             if (filtrosAtuais.casa === 'todas') {
-                preencherFiltroCasas(apostas);
+                preencherFiltroCasas(apostas || []);
             }
         }
 
@@ -324,20 +332,24 @@ document.addEventListener('DOMContentLoaded', () => {
             betsListContainer.querySelectorAll('.grid-row').forEach(row => row.remove());
             const emptyState = betsListContainer.querySelector('.empty-state');
             if (emptyState) emptyState.remove();
+            
+            const totalApostas = apostas.length;
 
-            if (apostas.length === 0) {
+            if (totalApostas === 0) {
                 betsListContainer.insertAdjacentHTML('beforeend', `<div class="empty-state"><p>Nenhuma aposta encontrada.</p></div>`);
             } else {
-                apostas.forEach(aposta => {
+                apostas.forEach((aposta, index) => {
                     const apostaElement = document.createElement('div');
                     apostaElement.classList.add('grid-row');
                     const dataFormatada = aposta.data ? new Date(aposta.data + 'T00:00:00').toLocaleDateString('pt-BR') : 'N/A';
                     const resultado = aposta.resultado_lucro_total || 0;
                     const resultadoClasse = resultado > 0 ? 'resultado-positivo' : resultado < 0 ? 'resultado-negativo' : '';
                     const statusClass = (aposta.status || '').toLowerCase().replace(/ /g, '-').replace('ú', 'u');
+                    const userFacingId = totalApostas - index;
+
 
                     apostaElement.innerHTML = `
-                        <div class="grid-cell" data-label="ID">${aposta.id}</div>
+                        <div class="grid-cell" data-label="ID">${userFacingId}</div>
                         <div class="grid-cell" data-label="Data">${dataFormatada}</div>
                         <div class="grid-cell" data-label="Nome">${aposta.nome_conta || '-'}</div>
                         <div class="grid-cell" data-label="Casa">${aposta.casa_apostas || '-'}</div>
