@@ -659,16 +659,11 @@ label {
     gap: 1.5rem;
 }
 
-.calculator-main-input {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    max-width: 400px;
-}
-
-.calculator-main-input label {
-    margin-bottom: 0;
-    font-weight: 500;
+.calculator-settings {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    align-items: flex-end;
 }
 
 .calculator-summary {
@@ -947,9 +942,8 @@ label {
     }
 
     /* --- CALCULADORA --- */
-    .calculator-main-input {
-        flex-direction: column;
-        align-items: stretch;
+    .calculator-settings {
+        grid-template-columns: 1fr;
     }
 }
 
