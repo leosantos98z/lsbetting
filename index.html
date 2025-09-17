@@ -189,9 +189,18 @@
                     <h2>Calculadora de Dutching</h2>
                 </div>
                 <div class="calculator-dutching">
-                    <div class="calculator-main-input">
-                        <label for="totalInvestment">Investimento:</label>
-                        <input type="number" id="totalInvestment" placeholder="R$ 100,00">
+                    <div class="calculator-settings">
+                        <div class="form-group">
+                            <label for="calculationType">Tipo de aposta</label>
+                            <select id="calculationType">
+                                <option value="totalInvestment">Investimento Total</option>
+                                <option value="firstStake">Montante da 1ª Seleção</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="mainInvestment" id="mainInvestmentLabel">Investimento Total:</label>
+                            <input type="number" id="mainInvestment" placeholder="R$ 100,00">
+                        </div>
                     </div>
                     <div class="calculator-summary">
                         <div class="summary-item">
@@ -201,6 +210,10 @@
                         <div class="summary-item">
                             <span>Retorno:</span>
                             <strong id="summaryReturn">R$ 0,00</strong>
+                        </div>
+                         <div class="summary-item" id="totalStakeContainer" style="display: none;">
+                            <span>Investimento Total:</span>
+                            <strong id="summaryTotalStake">R$ 0,00</strong>
                         </div>
                     </div>
                     <div class="calculator-table-container">
