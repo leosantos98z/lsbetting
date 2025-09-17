@@ -726,17 +726,34 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // --- LÓGICA DA CALCULADORA DE DUTCHING ---
         function setupDutchingCalculator() {
-            const totalInvestmentInput = document.getElementById('totalInvestment');
+            const calculationTypeSelect = document.getElementById('calculationType');
+            const mainInvestmentInput = document.getElementById('mainInvestment');
+            const mainInvestmentLabel = document.getElementById('mainInvestmentLabel');
             const calculatorRowsContainer = document.getElementById('calculator-rows');
             const addRowBtn = document.getElementById('addRowBtn');
             const resetCalcBtn = document.getElementById('resetCalcBtn');
             const summaryProfitEl = document.getElementById('summaryProfit');
             const summaryReturnEl = document.getElementById('summaryReturn');
+            const summaryTotalStakeEl = document.getElementById('summaryTotalStake');
+            const totalStakeContainer = document.getElementById('totalStakeContainer');
             
             const formatCurrency = (value) => value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 
+            function updateCalculationUI() {
+                const type = calculationTypeSelect.value;
+                if (type === 'totalInvestment') {
+                    mainInvestmentLabel.textContent = 'Investimento Total:';
+                    totalStakeContainer.style.display = 'none';
+                } else {
+                    mainInvestmentLabel.textContent = 'Montante da 1ª Seleção:';
+                    totalStakeContainer.style.display = 'flex';
+                }
+                calculateDutching();
+            }
+
             function calculateDutching() {
-                const totalInvestment = parseFloat(totalInvestmentInput.value) || 0;
+                const type = calculationTypeSelect.value;
+                const mainValue = parseFloat(mainInvestmentInput.value) || 0;
                 const allRows = Array.from(calculatorRowsContainer.querySelectorAll('tr'));
 
                 const oddsWithRows = allRows.map(row => ({
@@ -746,41 +763,58 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 const validEntries = oddsWithRows.filter(entry => entry.odd > 0);
 
-                if (totalInvestment <= 0 || validEntries.length === 0) {
+                if (mainValue <= 0 || validEntries.length === 0) {
                     allRows.forEach(row => {
                         row.querySelector('.stake-output').textContent = formatCurrency(0);
                         row.querySelector('.return-output').textContent = formatCurrency(0);
                     });
                     summaryProfitEl.textContent = formatCurrency(0);
                     summaryReturnEl.textContent = formatCurrency(0);
+                    summaryTotalStakeEl.textContent = formatCurrency(0);
                     summaryProfitEl.className = 'summary-item';
                     return;
                 }
 
-                const validOdds = validEntries.map(entry => entry.odd);
-                
-                const impliedProbabilities = validOdds.map(odd => (1 / odd) * 100);
-                const totalImpliedProbability = impliedProbabilities.reduce((sum, prob) => sum + prob, 0);
+                let stakes = [];
+                let totalInvestment = 0;
+                let avgReturn = 0;
 
-                if (totalImpliedProbability === 0) return;
+                if (type === 'totalInvestment') {
+                    totalInvestment = mainValue;
+                    const validOdds = validEntries.map(entry => entry.odd);
+                    const impliedProbabilities = validOdds.map(odd => (1 / odd));
+                    const totalImpliedProbability = impliedProbabilities.reduce((sum, prob) => sum + prob, 0);
 
-                const stakes = impliedProbabilities.map(prob => (totalInvestment * prob) / totalImpliedProbability);
-                const returns = stakes.map((stake, index) => stake * validOdds[index]);
-                
-                const avgReturn = returns.length > 0 ? returns[0] : 0;
+                    if (totalImpliedProbability > 0) {
+                        stakes = impliedProbabilities.map(prob => (totalInvestment * prob) / totalImpliedProbability);
+                        const returns = stakes.map((stake, index) => stake * validOdds[index]);
+                        avgReturn = returns.length > 0 ? returns[0] : 0;
+                    }
+                } else { // firstStake
+                    const firstStake = mainValue;
+                    const firstOdd = validEntries.length > 0 ? validEntries[0].odd : 0;
+                    if (firstOdd > 0) {
+                        const targetReturn = firstStake * firstOdd;
+                        avgReturn = targetReturn;
+                        stakes = validEntries.map(entry => targetReturn / entry.odd);
+                        totalInvestment = stakes.reduce((sum, stake) => sum + stake, 0);
+                    }
+                }
+
                 const profit = avgReturn - totalInvestment;
 
                 summaryProfitEl.textContent = formatCurrency(profit);
                 summaryReturnEl.textContent = formatCurrency(avgReturn);
+                summaryTotalStakeEl.textContent = formatCurrency(totalInvestment);
                 summaryProfitEl.classList.remove('profit', 'loss');
                 if (profit > 0) summaryProfitEl.classList.add('profit');
                 if (profit < 0) summaryProfitEl.classList.add('loss');
 
                 oddsWithRows.forEach(entry => {
                     const validIndex = validEntries.findIndex(valid => valid.row === entry.row);
-                    if (validIndex !== -1) {
+                    if (validIndex !== -1 && stakes[validIndex]) {
                         entry.row.querySelector('.stake-output').textContent = formatCurrency(stakes[validIndex]);
-                        entry.row.querySelector('.return-output').textContent = formatCurrency(returns[validIndex]);
+                        entry.row.querySelector('.return-output').textContent = formatCurrency(avgReturn);
                     } else {
                         entry.row.querySelector('.stake-output').textContent = formatCurrency(0);
                         entry.row.querySelector('.return-output').textContent = formatCurrency(0);
@@ -821,16 +855,17 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             
             function resetCalculator() {
-                totalInvestmentInput.value = '';
+                mainInvestmentInput.value = '';
                 calculatorRowsContainer.innerHTML = '';
                 addRow();
                 addRow();
                 calculateDutching();
             }
-
+            
+            calculationTypeSelect.addEventListener('change', updateCalculationUI);
+            mainInvestmentInput.addEventListener('input', calculateDutching);
             addRowBtn.addEventListener('click', addRow);
             resetCalcBtn.addEventListener('click', resetCalculator);
-            totalInvestmentInput.addEventListener('input', calculateDutching);
             
             resetCalculator();
         }
