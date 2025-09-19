@@ -174,6 +174,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const chartMonthlyBtn = document.getElementById('chartMonthlyBtn');
         const chartTitle = document.getElementById('chartTitle');
         const notasTextarea = document.getElementById('notasTextarea');
+        let isSubmitting = false;
 
         // --- NAVEGAÇÃO ---
         const inicioBtn = document.getElementById('inicioBtn');
@@ -700,8 +701,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
         formNovaAposta.addEventListener('submit', async (event) => {
             event.preventDefault();
+            if (isSubmitting) {
+                console.log('A submissão já está em andamento.');
+                return;
+            }
+            isSubmitting = true;
+
             const submitButton = formNovaAposta.querySelector('button[type="submit"]');
             submitButton.disabled = true;
+
             const apostaData = {
                 data: document.getElementById('data').value,
                 nome_conta: document.getElementById('nomeConta').value,
@@ -713,15 +721,22 @@ document.addEventListener('DOMContentLoaded', () => {
                 status: document.querySelector('input[name="status"]:checked').value,
                 resultado_lucro_total: parseFloat(document.getElementById('resultadoLucroTotal').value) || null
             };
-            if (idApostaEmEdicao) {
-                submitButton.textContent = 'Atualizando...';
-                await atualizarAposta(apostaData);
-            } else {
-                submitButton.textContent = 'Salvando...';
-                await salvarAposta(apostaData);
+
+            try {
+                if (idApostaEmEdicao) {
+                    submitButton.textContent = 'Atualizando...';
+                    await atualizarAposta(apostaData);
+                } else {
+                    submitButton.textContent = 'Salvando...';
+                    await salvarAposta(apostaData);
+                }
+            } catch (error) {
+                 console.error("Ocorreu um erro ao salvar a aposta:", error);
+            } finally {
+                isSubmitting = false;
+                submitButton.disabled = false;
+                submitButton.textContent = 'Salvar Aposta';
             }
-            submitButton.disabled = false;
-            submitButton.textContent = 'Salvar Aposta';
         });
 
         // --- LÓGICA DA CALCULADORA DE DUTCHING ---
