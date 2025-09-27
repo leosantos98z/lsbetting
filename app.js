@@ -352,22 +352,14 @@ document.addEventListener('DOMContentLoaded', () => {
                     const casa = aposta.casa_apostas || '-';
                     const resultadoFormatado = resultado.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
                     
-                    const nomeCell = document.createElement('div');
-                    nomeCell.className = `grid-cell ${resultadoClasse}`;
-                    nomeCell.setAttribute('data-label', 'Nome');
-                    nomeCell.setAttribute('data-content-resultado', resultadoFormatado);
-                    nomeCell.textContent = aposta.nome_conta || '-';
-
-                    const dataCell = document.createElement('div');
-                    dataCell.className = 'grid-cell';
-                    dataCell.setAttribute('data-label', 'Data');
-                    dataCell.setAttribute('data-content-casa', casa);
-                    dataCell.textContent = dataFormatada;
+                    if (resultadoClasse) {
+                        apostaElement.classList.add(resultadoClasse);
+                    }
                     
                     apostaElement.innerHTML = `
                         <div class="grid-cell" data-label="ID">${userFacingId}</div>
-                        ${dataCell.outerHTML}
-                        ${nomeCell.outerHTML}
+                        <div class="grid-cell" data-label="Data" data-content-casa="${casa}">${dataFormatada}</div>
+                        <div class="grid-cell ${resultadoClasse}" data-label="Nome" data-content-resultado="${resultadoFormatado}">${aposta.nome_conta || '-'}</div>
                         <div class="grid-cell" data-label="Casa">${casa}</div>
                         <div class="grid-cell" data-label="Obs">${aposta.observacao1 || '-'}</div>
                         <div class="grid-cell ${resultadoClasse}" data-label="Resultado">${resultadoFormatado}</div>
