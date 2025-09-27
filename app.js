@@ -348,14 +348,29 @@ document.addEventListener('DOMContentLoaded', () => {
                     const statusClass = (aposta.status || '').toLowerCase().replace(/ /g, '-').replace('ú', 'u');
                     const userFacingId = totalApostas - index;
 
+                    // Adiciona os dados como atributos para o CSS usar
+                    const casa = aposta.casa_apostas || '-';
+                    const resultadoFormatado = resultado.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+                    
+                    const nomeCell = document.createElement('div');
+                    nomeCell.className = `grid-cell ${resultadoClasse}`;
+                    nomeCell.setAttribute('data-label', 'Nome');
+                    nomeCell.setAttribute('data-content-resultado', resultadoFormatado);
+                    nomeCell.textContent = aposta.nome_conta || '-';
 
+                    const dataCell = document.createElement('div');
+                    dataCell.className = 'grid-cell';
+                    dataCell.setAttribute('data-label', 'Data');
+                    dataCell.setAttribute('data-content-casa', casa);
+                    dataCell.textContent = dataFormatada;
+                    
                     apostaElement.innerHTML = `
                         <div class="grid-cell" data-label="ID">${userFacingId}</div>
-                        <div class="grid-cell" data-label="Data">${dataFormatada}</div>
-                        <div class="grid-cell" data-label="Nome">${aposta.nome_conta || '-'}</div>
-                        <div class="grid-cell" data-label="Casa">${aposta.casa_apostas || '-'}</div>
+                        ${dataCell.outerHTML}
+                        ${nomeCell.outerHTML}
+                        <div class="grid-cell" data-label="Casa">${casa}</div>
                         <div class="grid-cell" data-label="Obs">${aposta.observacao1 || '-'}</div>
-                        <div class="grid-cell ${resultadoClasse}" data-label="Resultado">${resultado.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</div>
+                        <div class="grid-cell ${resultadoClasse}" data-label="Resultado">${resultadoFormatado}</div>
                         <div class="grid-cell" data-label="Tipo">${aposta.tipo_aposta || '-'}</div>
                         <div class="grid-cell" data-label="Status"><span class="status-badge status-${statusClass}">${aposta.status}</span></div>
                         <div class="grid-cell action-buttons" data-label="Ações">
