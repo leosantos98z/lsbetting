@@ -113,6 +113,24 @@
                     <section class="card stats-summary-card">
                         <div class="stat-item">
                             <div class="stat-info">
+                                <div class="stat-icon icon-green">📅</div>
+                                <div class="stat-text">
+                                    <p>Lucro do Mês</p>
+                                </div>
+                            </div>
+                            <div id="lucroMesValue" class="stat-value text-green">R$ 0,00</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-info">
+                                <div class="stat-icon icon-yellow">📊</div>
+                                <div class="stat-text">
+                                    <p>Lucro Médio (Mês)</p>
+                                </div>
+                            </div>
+                            <div id="lucroMedioMensalValue" class="stat-value text-yellow">R$ 0,00</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-info">
                                 <div class="stat-icon icon-green">$</div>
                                 <div class="stat-text">
                                     <p>Lucro Total</p>
@@ -124,7 +142,7 @@
                             <div class="stat-info">
                                 <div class="stat-icon icon-yellow">📈</div>
                                 <div class="stat-text">
-                                    <p>Lucro Médio</p>
+                                    <p>Lucro Médio (Geral)</p>
                                 </div>
                             </div>
                             <div id="lucroMedioValue" class="stat-value text-yellow">R$ 0,00</div>
@@ -148,17 +166,20 @@
                             <div id="apostasConcluidasValue" class="stat-value text-light">0</div>
                         </div>
                     </section>
-                    <section class="card chart-card">
-                        <div class="chart-header">
-                            <h3 id="chartTitle">Lucro Diário</h3>
-                            <div class="chart-toggle"><button id="chartDailyBtn" class="chart-toggle-btn active">D</button><button id="chartMonthlyBtn" class="chart-toggle-btn">M</button></div>
-                        </div>
-                        <canvas id="graficoLucroDiario"></canvas>
-                    </section>
-                    <section class="card notes-card">
-                        <h3>Notas</h3>
-                        <textarea id="notasTextarea" placeholder="Clique para adicionar nota"></textarea>
-                    </section>
+
+                    <div class="main-content-wrapper">
+                        <section class="card chart-card">
+                            <div class="chart-header">
+                                <h3 id="chartTitle">Lucro Diário</h3>
+                                <div class="chart-toggle"><button id="chartDailyBtn" class="chart-toggle-btn active">D</button><button id="chartMonthlyBtn" class="chart-toggle-btn">M</button></div>
+                            </div>
+                            <canvas id="graficoLucroDiario"></canvas>
+                        </section>
+                        <section class="card notes-card">
+                            <h3>Notas</h3>
+                            <textarea id="notasTextarea" placeholder="Clique para adicionar nota"></textarea>
+                        </section>
+                    </div>
                 </div>
 
                 <section class="card">
@@ -178,6 +199,13 @@
                             <div class="grid-cell">Status</div>
                             <div class="grid-cell">Ações</div>
                         </div>
+                    </div>
+                </section>
+                
+                <section id="total-results-card" class="card">
+                    <div class="total-results-content">
+                        <h3>Total dos Resultados Filtrados</h3>
+                        <div id="totalFiltradoValue" class="total-value">R$ 0,00</div>
                     </div>
                 </section>
             </div>
