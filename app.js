@@ -373,7 +373,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const lucroMesEl = document.getElementById('lucroMesValue');
             const lucroTotalEl = document.getElementById('lucroTotalValue');
             const lucroMedioMensalEl = document.getElementById('lucroMedioMensalValue');
-            const lucroMedioEl = document.getElementById('lucroMedioValue');
             const apostasAndamentoEl = document.getElementById('apostasAndamentoValue');
             const apostasConcluidasEl = document.getElementById('apostasConcluidasValue');
 
@@ -387,7 +386,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const todasAsConcluidas = apostas.filter(aposta => aposta.status === 'Concluído');
             const emAndamento = apostas.filter(aposta => aposta.status === 'Em andamento');
             const lucroTotal = todasAsConcluidas.reduce((total, aposta) => total + (aposta.resultado_lucro_total || 0), 0);
-            const lucroMedioGeral = todasAsConcluidas.length > 0 ? lucroTotal / todasAsConcluidas.length : 0;
 
             // --- CÁLCULOS DO MÊS ATUAL ---
             const hoje = new Date();
@@ -405,8 +403,7 @@ document.addEventListener('DOMContentLoaded', () => {
             lucroMesEl.textContent = formatarMoeda(lucroMes);
             lucroMedioMensalEl.textContent = formatarMoeda(lucroMedioMes);
             lucroTotalEl.textContent = formatarMoeda(lucroTotal);
-            lucroMedioEl.textContent = formatarMoeda(lucroMedioGeral);
-            apostasConcluidasEl.textContent = todasAsConcluidas.length;
+            apostasConcluidasEl.textContent = concluidasMesAtual.length;
             apostasAndamentoEl.textContent = emAndamento.length;
             
             // --- CÁLCULO E ATUALIZAÇÃO DO TOTAL FILTRADO ---
