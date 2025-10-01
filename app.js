@@ -369,23 +369,65 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         function atualizarPainelResumo(apostas) {
+            // Seletores dos elementos do painel
+            const lucroMesEl = document.getElementById('lucroMesValue');
             const lucroTotalEl = document.getElementById('lucroTotalValue');
+            const lucroMedioMensalEl = document.getElementById('lucroMedioMensalValue');
             const lucroMedioEl = document.getElementById('lucroMedioValue');
             const apostasAndamentoEl = document.getElementById('apostasAndamentoValue');
             const apostasConcluidasEl = document.getElementById('apostasConcluidasValue');
-            const concluidas = apostas.filter(aposta => aposta.status === 'Concluído');
-            const emAndamento = apostas.filter(aposta => aposta.status === 'Em andamento');
-            const lucroTotal = concluidas.reduce((total, aposta) => total + (aposta.resultado_lucro_total || 0), 0);
-            const lucroMedio = concluidas.length > 0 ? lucroTotal / concluidas.length : 0;
+
+            // Função auxiliar para formatar moeda
             const formatarMoeda = (valor) => valor.toLocaleString('pt-BR', {
                 style: 'currency',
                 currency: 'BRL'
             });
+
+            // --- CÁLCULOS GERAIS ---
+            const todasAsConcluidas = apostas.filter(aposta => aposta.status === 'Concluído');
+            const emAndamento = apostas.filter(aposta => aposta.status === 'Em andamento');
+            const lucroTotal = todasAsConcluidas.reduce((total, aposta) => total + (aposta.resultado_lucro_total || 0), 0);
+            const lucroMedioGeral = todasAsConcluidas.length > 0 ? lucroTotal / todasAsConcluidas.length : 0;
+
+            // --- CÁLCULOS DO MÊS ATUAL ---
+            const hoje = new Date();
+            const mesAtual = hoje.getMonth();
+            const anoAtual = hoje.getFullYear();
+            const concluidasMesAtual = todasAsConcluidas.filter(aposta => {
+                if (!aposta.data) return false;
+                const dataAposta = new Date(aposta.data + 'T00:00:00');
+                return dataAposta.getMonth() === mesAtual && dataAposta.getFullYear() === anoAtual;
+            });
+            const lucroMes = concluidasMesAtual.reduce((total, aposta) => total + (aposta.resultado_lucro_total || 0), 0);
+            const lucroMedioMes = concluidasMesAtual.length > 0 ? lucroMes / concluidasMesAtual.length : 0;
+
+            // --- ATUALIZAÇÃO DO PAINEL DE RESUMO ---
+            lucroMesEl.textContent = formatarMoeda(lucroMes);
+            lucroMedioMensalEl.textContent = formatarMoeda(lucroMedioMes);
             lucroTotalEl.textContent = formatarMoeda(lucroTotal);
-            lucroMedioEl.textContent = formatarMoeda(lucroMedio);
-            apostasConcluidasEl.textContent = concluidas.length;
+            lucroMedioEl.textContent = formatarMoeda(lucroMedioGeral);
+            apostasConcluidasEl.textContent = todasAsConcluidas.length;
             apostasAndamentoEl.textContent = emAndamento.length;
+            
+            // --- CÁLCULO E ATUALIZAÇÃO DO TOTAL FILTRADO ---
+            const totalFiltrado = apostas
+                .filter(aposta => aposta.status === 'Concluído')
+                .reduce((total, aposta) => total + (aposta.resultado_lucro_total || 0), 0);
+        
+            const totalCard = document.getElementById('total-results-card');
+            const totalValueEl = document.getElementById('totalFiltradoValue');
+        
+            if (totalCard && totalValueEl) {
+                totalValueEl.textContent = formatarMoeda(totalFiltrado);
+                totalValueEl.classList.remove('resultado-positivo', 'resultado-negativo');
+                if (totalFiltrado > 0) {
+                    totalValueEl.classList.add('resultado-positivo');
+                } else if (totalFiltrado < 0) {
+                    totalValueEl.classList.add('resultado-negativo');
+                }
+            }
         }
+
 
         function renderizarGrafico(apostas) {
             const ctx = document.getElementById('graficoLucroDiario').getContext('2d');
