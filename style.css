@@ -207,9 +207,21 @@ textarea {
 
 .summary-container {
     display: grid;
-    grid-template-columns: 1fr 2fr 1fr;
+    grid-template-columns: 1fr 2.5fr;
     gap: 1.5rem;
     margin-bottom: 1.5rem;
+    align-items: flex-start;
+}
+
+.main-content-wrapper {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 1.5rem;
+    align-items: stretch;
+}
+
+.main-content-wrapper .card {
+    margin-bottom: 0;
 }
 
 .stats-summary-card .stat-item {
@@ -268,9 +280,9 @@ textarea {
 
 .chart-card {
     position: relative;
-    height: 250px;
     display: flex;
     flex-direction: column;
+    height: 320px;
 }
 
 .chart-header {
@@ -302,8 +314,16 @@ textarea {
     color: var(--text-color);
 }
 
+.notes-card {
+    display: flex;
+    flex-direction: column;
+}
+
 .notes-card textarea {
-    height: calc(100% - 40px);
+    flex-grow: 1;
+    box-sizing: border-box;
+    min-height: 0;
+    resize: none;
 }
 
 .empty-state {
@@ -504,26 +524,24 @@ label {
     color: #3b82f6;
 }
 
-.bets-grid-container {
-    display: grid;
-    grid-template-columns: 40px 95px 1fr 1fr 2fr 1.2fr 1fr 110px 100px;
-    gap: 1rem;
-    padding: 0 1.5rem;
-    border-bottom: 1px solid var(--border-color);
-    font-weight: 700;
-    font-size: 0.9rem;
-    text-transform: uppercase;
-}
-
+.bets-grid-container,
 .grid-row {
     display: grid;
-    grid-template-columns: 40px 95px 1fr 1fr 2fr 1.2fr 1fr 110px 100px;
+    grid-template-columns: 30px 90px 1.15fr 1.2fr 2.2fr 1fr 0.8fr 110px 100px;
     gap: 1rem;
     align-items: center;
     padding: 1rem 1.5rem;
     border-bottom: 1px solid var(--border-color);
     transition: background-color 0.2s;
 }
+
+.bets-grid-container {
+    padding: 0 1.5rem;
+    font-weight: 700;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+}
+
 
 .grid-row:last-child {
     border-bottom: none;
@@ -537,7 +555,7 @@ label {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    font-weight: 500;
+    font-weight: 400;
     color: var(--text-color);
 }
 
@@ -590,12 +608,34 @@ label {
     color: var(--green-color);
 }
 
+.text-primary {
+    color: var(--primary-color);
+}
+
 .text-yellow {
     color: var(--primary-color);
 }
 
 .text-light {
     color: var(--text-color);
+}
+
+#total-results-card {
+    padding: 1.5rem;
+    text-align: center;
+    background-color: var(--bg-color);
+}
+
+.total-results-content h3 {
+    margin: 0 0 0.5rem 0;
+    color: var(--text-muted-color);
+    font-weight: 500;
+    font-size: 1rem;
+}
+
+.total-results-content .total-value {
+    font-size: 2rem;
+    font-weight: 700;
 }
 
 /* ADMIN PANEL */
@@ -791,6 +831,10 @@ label {
         grid-template-columns: 1fr;
     }
 
+    .main-content-wrapper {
+        grid-template-columns: 1fr;
+    }
+
     .chart-card {
         /* Garante que o gráfico não fique espremido */
         height: 300px;
@@ -946,4 +990,5 @@ label {
         grid-template-columns: 1fr;
     }
 }
+
 
