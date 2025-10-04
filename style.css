@@ -246,6 +246,7 @@ textarea {
     display: flex;
     align-items: center;
     gap: 1rem;
+    flex-grow: 1;
 }
 
 .stat-icon {
@@ -276,6 +277,28 @@ textarea {
 .stat-value {
     font-size: 1.1rem;
     font-weight: 700;
+}
+
+.visibility-toggle-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.25rem;
+    margin-left: auto;
+    color: var(--text-muted-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.2s;
+}
+
+.visibility-toggle-btn:hover {
+    color: var(--text-color);
+}
+
+.visibility-toggle-btn svg {
+    width: 20px;
+    height: 20px;
 }
 
 .chart-card {
@@ -990,20 +1013,4 @@ label {
         grid-template-columns: 1fr;
     }
 }
-
-
-" code between  and  in the most up-to-date Canvas "Estilos" document above and am asking a query about/based on this code below.
-Instructions to follow:
-  * Don't output/edit the document if the query is Direct/Simple. For example, if the query asks for a simple explanation, output a direct answer.
-  * Make sure to **edit** the document if the query shows the intent of editing the document, in which case output the entire edited document, **not just that section or the edits**.
-    * Don't output the same document/empty document and say that you have edited it.
-    * Don't change unrelated code in the document.
-  * Don't output  and  in your final response.
-  * Any references like "this" or "selected code" refers to the code between  and  tags.
-  * Just acknowledge my request in the introduction.
-  * Make sure to refer to the document as "Canvas" in your response.
-
-Teria como remover o Lucro medio geral.
-Colocar o lucro total por ultimo.
-e todo mes as apostas concluidas ir pra 0.
 
