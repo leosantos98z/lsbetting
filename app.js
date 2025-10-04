@@ -9,6 +9,13 @@ let filtrosAtuais = {
     status: 'todos'
 };
 let authMode = 'login';
+let isLucroTotalVisible = true;
+let lucroTotalCache = 0;
+
+// Ícones SVG para o botão de visibilidade
+const eyeOpenIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>`;
+const eyeClosedIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"/><path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"/><path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"/><line x1="2" x2="22" y1="2" y2="22"/></svg>`;
+
 
 // ======================= CONFIGURAÇÃO DO SUPABASE =======================
 const SUPABASE_URL = 'https://veswuzzftcqvpxfqithr.supabase.co';
@@ -154,6 +161,12 @@ document.addEventListener('DOMContentLoaded', () => {
         checkUserSession();
     });
 
+    // Função auxiliar para formatar moeda
+    const formatarMoeda = (valor) => valor.toLocaleString('pt-BR', {
+        style: 'currency',
+        currency: 'BRL'
+    });
+
     // --- FUNÇÃO DE INICIALIZAÇÃO DA APLICAÇÃO PRINCIPAL ---
     function initializeApp(isAdmin) {
 
@@ -174,7 +187,32 @@ document.addEventListener('DOMContentLoaded', () => {
         const chartMonthlyBtn = document.getElementById('chartMonthlyBtn');
         const chartTitle = document.getElementById('chartTitle');
         const notasTextarea = document.getElementById('notasTextarea');
+        const toggleLucroTotalBtn = document.getElementById('toggleLucroTotal');
+        const lucroTotalValueEl = document.getElementById('lucroTotalValue');
         let isSubmitting = false;
+
+        // --- LÓGICA DE VISIBILIDADE DO LUCRO TOTAL ---
+        function updateLucroTotalVisibility() {
+            if (isLucroTotalVisible) {
+                lucroTotalValueEl.textContent = formatarMoeda(lucroTotalCache);
+                toggleLucroTotalBtn.innerHTML = eyeOpenIcon;
+            } else {
+                lucroTotalValueEl.textContent = 'R$ ••••••';
+                toggleLucroTotalBtn.innerHTML = eyeClosedIcon;
+            }
+        }
+
+        const savedVisibility = localStorage.getItem('lucroTotalVisible');
+        if (savedVisibility !== null) {
+            isLucroTotalVisible = savedVisibility === 'true';
+        }
+
+        toggleLucroTotalBtn.addEventListener('click', () => {
+            isLucroTotalVisible = !isLucroTotalVisible;
+            localStorage.setItem('lucroTotalVisible', isLucroTotalVisible);
+            updateLucroTotalVisibility();
+        });
+
 
         // --- NAVEGAÇÃO ---
         const inicioBtn = document.getElementById('inicioBtn');
@@ -183,11 +221,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const calculatorPanel = document.getElementById('calculator-panel');
 
         function navigateTo(page) {
-            // Esconde todos os painéis
             dashboardContent.style.display = 'none';
             calculatorPanel.style.display = 'none';
-
-            // Remove a classe 'active' de todos os links de navegação
             inicioBtn.classList.remove('active');
             calculadoraBtn.classList.remove('active');
 
@@ -200,7 +235,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
-        navigateTo('dashboard'); // Garante que a tela inicial seja exibida corretamente
+        navigateTo('dashboard');
 
         inicioBtn.addEventListener('click', (e) => {
             e.preventDefault();
@@ -289,44 +324,44 @@ document.addEventListener('DOMContentLoaded', () => {
         async function carregarApostas() {
             const { data: { user } } = await supabaseClient.auth.getUser();
             if (!user) {
-                console.log("Utilizador não autenticado, não é possível carregar apostas.");
-                renderizarLista([]); // Limpa a lista se não houver utilizador
+                renderizarLista([]);
+                atualizarPainelResumo([]);
+                renderizarGrafico([]);
                 return;
             }
 
-            let query = supabaseClient.from('apostas').select('*').eq('user_id', user.id);
+            const { data: todasAsApostas, error } = await supabaseClient
+                .from('apostas')
+                .select('*')
+                .eq('user_id', user.id)
+                .order('id', { ascending: false });
 
-            if (filtrosAtuais.nome) {
-                query = query.ilike('nome_conta', `%${filtrosAtuais.nome}%`);
-            }
-            if (filtrosAtuais.casa && filtrosAtuais.casa !== 'todas') {
-                query = query.eq('casa_apostas', filtrosAtuais.casa);
-            }
-            if (filtrosAtuais.tipo && filtrosAtuais.tipo !== 'todos') {
-                query = query.eq('tipo_aposta', filtrosAtuais.tipo);
-            }
-            if (filtrosAtuais.status && filtrosAtuais.status !== 'todos') {
-                query = query.eq('status', filtrosAtuais.status);
-            }
-            query = query.order('id', {
-                ascending: false
-            });
-
-            const {
-                data: apostas,
-                error
-            } = await query;
             if (error) {
                 console.error('Erro ao buscar apostas:', error);
                 return;
             }
 
-            renderizarLista(apostas || []);
-            atualizarPainelResumo(apostas || []);
-            renderizarGrafico(apostas || []);
-            if (filtrosAtuais.casa === 'todas') {
-                preencherFiltroCasas(apostas || []);
-            }
+            const apostas = todasAsApostas || [];
+
+            // Atualiza resumo e gráfico com a lista COMPLETA
+            atualizarPainelResumo(apostas);
+            renderizarGrafico(apostas);
+            preencherFiltroCasas(apostas);
+
+            // Aplica filtros para a lista
+            const apostasFiltradas = apostas.filter(aposta => {
+                const nomeMatch = !filtrosAtuais.nome || (aposta.nome_conta && aposta.nome_conta.toLowerCase().includes(filtrosAtuais.nome.toLowerCase()));
+                const casaMatch = filtrosAtuais.casa === 'todas' || aposta.casa_apostas === filtrosAtuais.casa;
+                const tipoMatch = filtrosAtuais.tipo === 'todos' || aposta.tipo_aposta === filtrosAtuais.tipo;
+                const statusMatch = filtrosAtuais.status === 'todos' || aposta.status === filtrosAtuais.status;
+                return nomeMatch && casaMatch && tipoMatch && statusMatch;
+            });
+
+            // Renderiza a lista com dados FILTRADOS
+            renderizarLista(apostasFiltradas);
+            
+            // Atualiza o card de Total Filtrado com base nos dados FILTRADOS
+            atualizarTotalFiltrado(apostasFiltradas);
         }
 
         function renderizarLista(apostas) {
@@ -368,52 +403,14 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
-        function atualizarPainelResumo(apostas) {
-            // Seletores dos elementos do painel
-            const lucroMesEl = document.getElementById('lucroMesValue');
-            const lucroTotalEl = document.getElementById('lucroTotalValue');
-            const lucroMedioMensalEl = document.getElementById('lucroMedioMensalValue');
-            const apostasAndamentoEl = document.getElementById('apostasAndamentoValue');
-            const apostasConcluidasEl = document.getElementById('apostasConcluidasValue');
-
-            // Função auxiliar para formatar moeda
-            const formatarMoeda = (valor) => valor.toLocaleString('pt-BR', {
-                style: 'currency',
-                currency: 'BRL'
-            });
-
-            // --- CÁLCULOS GERAIS ---
-            const todasAsConcluidas = apostas.filter(aposta => aposta.status === 'Concluído');
-            const emAndamento = apostas.filter(aposta => aposta.status === 'Em andamento');
-            const lucroTotal = todasAsConcluidas.reduce((total, aposta) => total + (aposta.resultado_lucro_total || 0), 0);
-
-            // --- CÁLCULOS DO MÊS ATUAL ---
-            const hoje = new Date();
-            const mesAtual = hoje.getMonth();
-            const anoAtual = hoje.getFullYear();
-            const concluidasMesAtual = todasAsConcluidas.filter(aposta => {
-                if (!aposta.data) return false;
-                const dataAposta = new Date(aposta.data + 'T00:00:00');
-                return dataAposta.getMonth() === mesAtual && dataAposta.getFullYear() === anoAtual;
-            });
-            const lucroMes = concluidasMesAtual.reduce((total, aposta) => total + (aposta.resultado_lucro_total || 0), 0);
-            const lucroMedioMes = concluidasMesAtual.length > 0 ? lucroMes / concluidasMesAtual.length : 0;
-
-            // --- ATUALIZAÇÃO DO PAINEL DE RESUMO ---
-            lucroMesEl.textContent = formatarMoeda(lucroMes);
-            lucroMedioMensalEl.textContent = formatarMoeda(lucroMedioMes);
-            lucroTotalEl.textContent = formatarMoeda(lucroTotal);
-            apostasConcluidasEl.textContent = concluidasMesAtual.length;
-            apostasAndamentoEl.textContent = emAndamento.length;
-            
-            // --- CÁLCULO E ATUALIZAÇÃO DO TOTAL FILTRADO ---
-            const totalFiltrado = apostas
+        function atualizarTotalFiltrado(apostasFiltradas) {
+            const totalFiltrado = apostasFiltradas
                 .filter(aposta => aposta.status === 'Concluído')
                 .reduce((total, aposta) => total + (aposta.resultado_lucro_total || 0), 0);
-        
+
             const totalCard = document.getElementById('total-results-card');
             const totalValueEl = document.getElementById('totalFiltradoValue');
-        
+
             if (totalCard && totalValueEl) {
                 totalValueEl.textContent = formatarMoeda(totalFiltrado);
                 totalValueEl.classList.remove('resultado-positivo', 'resultado-negativo');
@@ -423,6 +420,41 @@ document.addEventListener('DOMContentLoaded', () => {
                     totalValueEl.classList.add('resultado-negativo');
                 }
             }
+        }
+
+        function atualizarPainelResumo(apostas) {
+            const lucroMesEl = document.getElementById('lucroMesValue');
+            const lucroMedioMensalEl = document.getElementById('lucroMedioMensalValue');
+            const apostasAndamentoEl = document.getElementById('apostasAndamentoValue');
+            const apostasConcluidasEl = document.getElementById('apostasConcluidasValue');
+
+            const todasAsConcluidas = apostas.filter(aposta => aposta.status === 'Concluído');
+            const emAndamento = apostas.filter(aposta => aposta.status === 'Em andamento');
+            const lucroTotal = todasAsConcluidas.reduce((total, aposta) => total + (aposta.resultado_lucro_total || 0), 0);
+            
+            lucroTotalCache = lucroTotal;
+            updateLucroTotalVisibility();
+
+            const hoje = new Date();
+            const mesAtual = hoje.getMonth();
+            const anoAtual = hoje.getFullYear();
+
+            const concluidasMesAtual = todasAsConcluidas.filter(aposta => {
+                if (!aposta.data) return false;
+                const [year, month] = aposta.data.split('-').map(Number);
+                return year === anoAtual && month === mesAtual + 1;
+            });
+
+            const lucroMes = concluidasMesAtual.reduce((total, aposta) => total + (aposta.resultado_lucro_total || 0), 0);
+            
+            // LÓGICA CORRIGIDA: Média de lucro por dia com aposta, não por aposta individual.
+            const diasComApostasNoMes = new Set(concluidasMesAtual.map(aposta => aposta.data));
+            const lucroMedioMes = diasComApostasNoMes.size > 0 ? lucroMes / diasComApostasNoMes.size : 0;
+
+            lucroMesEl.textContent = formatarMoeda(lucroMes);
+            lucroMedioMensalEl.textContent = formatarMoeda(lucroMedioMes);
+            apostasConcluidasEl.textContent = concluidasMesAtual.length;
+            apostasAndamentoEl.textContent = emAndamento.length;
         }
 
 
@@ -934,4 +966,5 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- INICIALIZAÇÃO GERAL ---
     checkUserSession();
 });
+
 
