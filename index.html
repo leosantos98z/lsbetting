@@ -293,12 +293,11 @@
                             <legend><span>2</span> Dados da Aposta</legend>
                             <div class="form-grid-double">
                                 <div><label for="casaApostas">Casa de apostas</label><input type="text" id="casaApostas" placeholder="Nome da casa de apostas"></div>
-                                <div><label for="lucroTotalPrevisto">Valor Apostado (R$)</label><input type="number" step="0.01" id="lucroTotalPrevisto" placeholder="Ex: 150.00"></div>
                             </div>
                         </fieldset>
                         <fieldset>
                             <legend><span>3</span> Gestão de Resultados</legend>
-                            <div><label for="resultadoLucroTotal">Lucro (Resultado Final) (R$)</label><input type="number" step="0.01" id="resultadoLucroTotal" placeholder="Ex: 100.00 ou -50.00"></div><label style="margin-top: 1rem;">Status da Aposta</label>
+                            <div><label for="resultadoLucroTotal">Lucro Final (Valor inteiro, sem os centavos, "exemplo: 80")</label><input type="number" step="0.01" id="resultadoLucroTotal" placeholder="Ex: 100.00 ou -50.00"></div><label style="margin-top: 1rem;">Status da Aposta</label>
                             <div class="status-options"><input type="radio" id="statusConcluido" name="status" value="Concluído" checked><label for="statusConcluido">✅ Concluído</label><input type="radio" id="statusAndamento" name="status" value="Em andamento"><label for="statusAndamento">🕒 Em andamento</label><input type="radio" id="statusFreebet" name="status" value="Aguardando Freebet"><label for="statusFreebet">🔄 Aguardando Freebet</label></div>
                         </fieldset>
                     </div>
@@ -331,4 +330,3 @@
     <script src="app.js"></script>
 </body>
 </html>
-
