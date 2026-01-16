@@ -638,6 +638,7 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('obs1').value = aposta.observacao1;
             document.getElementById('tipoAposta').value = aposta.tipo_aposta;
             document.getElementById('casaApostas').value = aposta.casa_apostas;
+            document.getElementById('lucroTotalPrevisto').value = aposta.valor_lucro_total_previsto;
             document.getElementById('resultadoLucroTotal').value = aposta.resultado_lucro_total;
             document.querySelectorAll('input[name="status"]').forEach(radio => {
                 radio.checked = radio.value === aposta.status;
@@ -787,6 +788,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 observacao2: '', // Adicionado para evitar erro de not-null
                 tipo_aposta: document.getElementById('tipoAposta').value,
                 casa_apostas: document.getElementById('casaApostas').value,
+                valor_lucro_total_previsto: parseFloat(document.getElementById('lucroTotalPrevisto').value) || 0,
                 status: document.querySelector('input[name="status"]:checked').value,
                 resultado_lucro_total: parseFloat(document.getElementById('resultadoLucroTotal').value) || null
             };
